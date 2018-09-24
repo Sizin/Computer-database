@@ -1,3 +1,16 @@
+$( document ).ready(function() {
+    var url_string = window.location.href;
+    var url = new URL(url_string);
+    var range = url.searchParams.get("range");
+	
+    
+    $("#range" + range).addClass("active");
+	
+});
+
+
+
+
 //On load
 $(function() {
     // Default: hide edit mode
@@ -24,7 +37,6 @@ $(function() {
 
 });
 
-
 // Function setCheckboxValues
 (function ( $ ) {
 
@@ -40,6 +52,23 @@ $(function() {
     };
 
 }( jQuery ));
+
+//Set result per page
+$(".pageRange").click(function() {
+	var range = $(this).attr("value");
+	document.location.href = '/CdbSinan/Dashboard?range='+range
+
+});
+
+
+$(".test").click(function() {
+	var page = $(this).attr("value");
+	console.log(page);
+});
+
+
+
+
 
 // Function toggleEditMode
 (function ( $ ) {
