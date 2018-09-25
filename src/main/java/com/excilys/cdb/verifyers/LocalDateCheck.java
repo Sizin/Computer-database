@@ -8,8 +8,16 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoField;
 import java.util.Locale;
+import java.util.Optional;
+
+import com.excilys.cdb.exceptions.DateFormatException;
+import com.excilys.cdb.exceptions.DateRangeException;
 
 public class LocalDateCheck {
+	
+	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+	
 	
 	/**
 	 * @param format dd/MM/yyyy OR yyyy-MM-dd
@@ -33,4 +41,39 @@ public class LocalDateCheck {
 	    }
 	    return false;
 	}
+	
+	public static boolean validDate(String dateString) throws DateFormatException, DateRangeException {
+		boolean valid = false;
+		
+		LocalDate date = null;
+		
+		if(!isDateStringEmpty(dateString)) {
+			if(isValidFormat(dateString)) {
+				return true;
+			}else {
+				throw new DateFormatException();
+			}
+		}else {
+			return false;
+		}
+	}
+	
+	public static boolean isGreaterDate(LocalDate date1, LocalDate date2) {	
+		if(date1.compareTo(date2) <= 0) { // if introduced date greater or equal to introducedDate
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
+	public static boolean isDateStringEmpty(String dateString) {
+		if (dateString != null && dateString != "" ) {
+			return false;
+		}else {
+			return true;
+		}
+	}
+	
+	
+	
 }
