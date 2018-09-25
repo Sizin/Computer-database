@@ -14,6 +14,10 @@ public class Company {
 		this.name 	= name;
 	}
 	
+	public long getId() {
+		return this.id;
+	}
+	
 	public String getName() {
 		if(this.name == null) {
 			return "null";
