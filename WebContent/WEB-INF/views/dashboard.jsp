@@ -14,14 +14,14 @@
 <body>
     <header class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="dashboard.html"> Application - Computer Database </a>
+            <a class="navbar-brand" href="/CdbSinan/Dashboard"> Application - Computer Database </a>
         </div>
     </header>
 
     <section id="main">
         <div class="container">
             <h1 id="homeTitle">
-                121 Computers found
+                ${numberOfComputer} Computers found
             </h1>
             <div id="actions" class="form-horizontal">
                 <div class="pull-left">
@@ -33,7 +33,7 @@
                     </form>
                 </div>
                 <div class="pull-right">
-                    <a class="btn btn-success" id="addComputer" href="addComputer.html">Add Computer</a> 
+                    <a class="btn btn-success" id="addComputer" href="addComputer">Add Computer</a> 
                     <a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();">Edit</a>
                 </div>
             </div>
@@ -125,7 +125,7 @@
         	</ul>
 		
         <div class="btn-group btn-group-sm pull-right" role="group" >
-            <button type="button" class="btn btn-default pageRange" id="range10" value="10">10</button>
+            <button type="button" class="btn btn-default pageRange active" id="range10" value="10">10</button>
             <button type="button" class="btn btn-default pageRange" id="range50" value="50">50</button>
             <button type="button" class="btn btn-default pageRange" id="range100" value="100">100</button>
         </div>
