@@ -7,7 +7,9 @@ import java.util.regex.Pattern;
 
 import com.excilys.cdb.app.menus.Menu;
 import com.excilys.cdb.app.menus.UpdateComputerMenu;
+import com.excilys.cdb.exceptions.ComputerNameException;
 import com.excilys.cdb.exceptions.DateFormatException;
+import com.excilys.cdb.exceptions.DateRangeException;
 import com.excilys.cdb.exceptions.InputException;
 import com.excilys.cdb.model.*;
 
@@ -147,8 +149,11 @@ public class Cli {
 			
 		} while (typeDiscontinued);
 
-		computerService.createComputer(name, introduced, discontinued);
-
+		try {
+			computerService.createComputer(name, introduced, discontinued);
+		} catch (DateFormatException | DateRangeException | ComputerNameException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void updateComputer() {
