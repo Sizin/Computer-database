@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -36,16 +37,14 @@ public class ComputerDao {
 	private static final String GET_ALL = "SELECT compu.id, compu.name, compu.introduced, compu.discontinued, compu.company_id, compa.name as company_name FROM computer compu LEFT JOIN company compa ON compu.id = compa.id LIMIT ?,?;";
 	private static final String GET_ONE = "SELECT id, name, introduced, discontinued, company_id FROM computer WHERE id=?";
 	private static final String GET_COMPUTER_WITH_COMPANY = "SELECT compu.id, compa.name as company_name FROM computer compu INNER JOIN company compa ON compu.company_id WHERE compu.id=? AND compa.id = ?;";
-	private static final String ADD_ONE = "INSERT INTO computer (name, introduced, discontinued) VALUES(?, ?, ?);";
+	private static final String ADD = "INSERT INTO computer (name, introduced, discontinued) VALUES(?, ?, ?);";
+	private static final String ADD_COMPANY = "UPDATE computer SET company_id= ? WHERE id=?";
 	private static final String UPDATE_ONE_COLUMN = "UPDATE computer SET [*column*] = ? WHERE id=?;";
 	private static final String DELETE_ONE = "DELETE FROM computer WHERE id=?;";
 	
 	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
 	
 	private ComputerDao(){
-
-		 
-		
 		try {			
 			Properties props = new Properties();
 
@@ -64,13 +63,10 @@ public class ComputerDao {
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -160,6 +156,28 @@ public class ComputerDao {
 
 	}
 
+	public long addCompany(long computerId, long companyId) {
+		long updatedComputerId = 0;
+		
+		try (Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)){
+			PreparedStatement addCompanyPStmt = con.prepareStatement(ADD_COMPANY, Statement.RETURN_GENERATED_KEYS);
+			addCompanyPStmt.setLong(1, companyId);
+			addCompanyPStmt.setLong(2, computerId);
+			addCompanyPStmt.executeUpdate();
+			
+			ResultSet addCompanyRs = addCompanyPStmt.getGeneratedKeys();
+			
+			if(addCompanyRs.next()) {
+				updatedComputerId = addCompanyRs.getInt(1);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		
+		return updatedComputerId;
+	}
+	
 	/**
 	 * Retrieves one row from computer table given a computer ID
 	 * 
@@ -227,13 +245,27 @@ public class ComputerDao {
 	public long insertComputer(Computer computer) {
 		long id = 0;
 		
+		
+		System.out.println(computer);
+		
 		try (Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)){			
 			// In order to get the last inserted ID we have to specify it here
-			PreparedStatement pStmt = con.prepareStatement(ADD_ONE, Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement pStmt = con.prepareStatement(ADD, Statement.RETURN_GENERATED_KEYS);
 			
 			pStmt.setString(1, computer.getName());
-			pStmt.setString(2, computer.getIntroducedDate().toString());
-			pStmt.setString(3, computer.getDiscontinuedDate().toString());
+			
+			if(computer.getIntroducedDate() == null) {
+				pStmt.setNull(2, java.sql.Types.DATE);
+			}else {
+				pStmt.setString(2, computer.getIntroducedDate().toString());
+			}
+			
+			if(computer.getDiscontinuedDate() == null) {
+				pStmt.setNull(3, java.sql.Types.DATE);
+			}else {
+				pStmt.setString(3, computer.getIntroducedDate().toString());
+			}
+			
 			pStmt.executeUpdate();
 			// Getting ID of the new row 
             ResultSet rs = pStmt.getGeneratedKeys();

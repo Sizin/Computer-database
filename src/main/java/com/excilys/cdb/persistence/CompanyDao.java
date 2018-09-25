@@ -8,14 +8,21 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 import com.excilys.cdb.model.Company;
+import com.excilys.cdb.model.CompanyBuilder;
+
 
 public class CompanyDao {
 
+	private static String DB_URL;
+	private static String DB_USERNAME;
+	private static String DB_PASSWORD;
+	
 	private static CompanyDao companyDao = null;
 	private Connection con;
 	
@@ -24,13 +31,14 @@ public class CompanyDao {
 	
 	private CompanyDao() {
 		try {			
-
 			Properties props = new Properties();
-
 			InputStream inputStream = getClass().getResourceAsStream("/mysql.properties");
 			props.load(inputStream);
-			this.con = DriverManager.getConnection(props.getProperty("DB_URL"), props.getProperty("DB_USERNAME"), props.getProperty("DB_PASSWORD") );
-		}catch(SQLException | IOException e) {
+	
+			DB_URL = props.getProperty("DB_URL");
+			DB_USERNAME = props.getProperty("DB_USERNAME");
+			DB_PASSWORD = props.getProperty("DB_PASSWORD");
+		}catch(IOException e) {
 			System.out.println(e);
 		}
 		
@@ -46,7 +54,6 @@ public class CompanyDao {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
 	
 	public static CompanyDao getInstance() {
@@ -56,6 +63,28 @@ public class CompanyDao {
 		return companyDao;
 	}
 	
+	
+	public Company getCompanyDetails(long id){
+		Company company  = null;
+		CompanyBuilder companyBuilder = new CompanyBuilder();
+		try (Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)){
+			PreparedStatement getComputerPstmt 	= con.prepareStatement(GET_ONE);
+			getComputerPstmt.setLong(1,id);
+			ResultSet companyRs	= getComputerPstmt.executeQuery();
+			if(companyRs.next()) {
+				companyBuilder.setId(companyRs.getInt("id"));
+				companyBuilder.setName(companyRs.getString("name"));
+				company = companyBuilder.build();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}  
+		
+		return company;
+		
+		
+	}
+	
 	/**
 	 * Retrieves all the companies from the compan1y table
 	 * 
@@ -63,7 +92,7 @@ public class CompanyDao {
 	 */
 	public List<Company> getAllCompanies(){
 		List<Company> companies = new ArrayList<Company>();
-		try {
+		try (Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)){
 			Statement stmt 	= con.createStatement();
 			ResultSet rs	= stmt.executeQuery(GET_ALL);
 			while(rs.next()) {
@@ -74,6 +103,7 @@ public class CompanyDao {
 		}  
 		return companies;
 	}
+	
 	
 	
 	
