@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.swing.plaf.synth.SynthSpinnerUI;
 
 import com.excilys.cdb.model.Computer;
+import com.excilys.cdb.services.CompanyService;
 import com.excilys.cdb.services.ComputerService;
 
 /**
@@ -25,33 +26,36 @@ import com.excilys.cdb.services.ComputerService;
 public class Dashboard extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
+	private  CompanyService companyService;
+	private  ComputerService computerService;
+	
     /**
      * @see HttpServlet#HttpServlet()
      */
     public Dashboard() {
         super();
-        // TODO Auto-generated constructor stub
+        this.companyService = CompanyService.getInstance();
+        this.computerService = ComputerService.getInstance();
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ComputerService cs = ComputerService.getInstance();
-
 		List<Computer> computers = new ArrayList<Computer>();
 			
-		int numberOfComputer = cs.getComputerCount();
+		int numberOfComputer = computerService.getComputerCount();
 		int pageRange = request.getParameter("range") == null ? 10 : Integer.parseInt(request.getParameter("range")); 
 		int pageNumber = request.getParameter("page") == null ? 0 : Integer.parseInt(request.getParameter("page"));
 		int numberOfPage = numberOfComputer/pageRange;
 
-		computers = cs.showComputers(pageNumber,pageRange);
+		computers = computerService.showComputers(pageNumber,pageRange);
 		
 		request.setAttribute("computers", computers);
 		request.setAttribute("range", pageRange);
 		request.setAttribute("page", pageNumber);
 		request.setAttribute("numberOfPage", numberOfPage);
+		request.setAttribute("numberOfComputer", numberOfComputer);
 		request.getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(request, response);
 		
 	}
