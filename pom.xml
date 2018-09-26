@@ -29,7 +29,6 @@
 
 
 	<build>
-		<sourceDirectory>src</sourceDirectory>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -66,7 +65,6 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>${mysql.connector.version}</version>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>jstl</groupId>
