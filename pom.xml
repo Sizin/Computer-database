@@ -15,12 +15,16 @@
 		<tomcat.version>9.0.0.M1</tomcat.version>
 		<!-- MYSQL CONNECTOR -->
 		<mysql.connector.version>5.1.6</mysql.connector.version>
+		<!-- HIBERNATE -->
+		<hibernate.version>5.3.6.Final</hibernate.version>
 		<!-- JSTL -->
 		<jstl.version>1.2</jstl.version>
 		<!-- H2 DATABASE -->
 		<h2.version>1.4.196</h2.version>
-		<!-- LOG4J  -->
+		<!-- LOG4J -->
 		<log4j.version>1.2.17</log4j.version>
+		<!-- JUNIT VERSION -->
+		<junit.version>4.12</junit.version>
 	</properties>
 
 
@@ -69,18 +73,29 @@
 			<artifactId>jstl</artifactId>
 			<version>${jstl.version}</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>${hibernate.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+		<!-- TEST -->
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<version>${h2.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/log4j/log4j -->
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>${log4j.version}</version>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
 		</dependency>
 
 	</dependencies>
