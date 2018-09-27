@@ -1,13 +1,22 @@
 package com.excilys.cdb.model;
 
+import javax.persistence.*;
+
 /**
  * @author Sizin
  *
  */
+@Entity
+@NamedQueries(value = {
+	    @NamedQuery(name = "Company.getAll", query = "SELECT compa FROM Company compa")
+	})
 public class Company {
+	@Id
 	private long id;
 	private String name;
 	
+	public Company() {
+	}
 	
 	public Company(long id, String name) {
 		this.id 	= id;
@@ -27,9 +36,12 @@ public class Company {
 
 	}
 	
+	@Override
 	public String toString() {
-		String str;
-		str = " | Company - Id : "+this.id+" Name : "+this.name; 
-		return str;
+		return "Company{"+
+				"id="+ id +
+				", name='" + name +'\'' +
+				'}';
 	}
+	
 }

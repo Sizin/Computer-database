@@ -3,18 +3,28 @@ package com.excilys.cdb.model;
 import java.time.LocalDate;
 import java.util.Optional;
 
+import javax.persistence.*;
+
 /**
  * @author Sizin
  *
  */
+@Entity
+@NamedQueries(value = {
+	    @NamedQuery(name = "Computer.getAll", query = "SELECT compu FROM Computer compu")
+	})
 public final class Computer {
 	
 	private long id;
 	private String name;
 	private LocalDate introducedDate;
 	private LocalDate discontinuedDate;
-	private Company company;
+	private Company company = new Company();
 
+	public Computer() {
+		
+	}
+	
 	public Computer(long id, String name, LocalDate introducedDate, LocalDate discontinuedDate, Company company) {
 		this.id = id;
 		this.name = name;
@@ -62,34 +72,21 @@ public final class Computer {
 		this.company = company;
 	}
 	
-//	public Optional<String> getCompanyName() {
-//		String companyName = "null";
-//		
-//		companyName = this.company.getName();
-//
-//		return Optional.ofNullable(companyName);
-//	}
-	
 	public String getCompanyName() {
-		String companyName = "null";
-		
-		companyName = this.company.getName();
-
-		return companyName;
+		return this.company.getName();
 	}
 	
 	@Override
 	public String toString() {
-		String str;
-		if (this.company != null) {
-			str = " | Computer - Id : "+this.id+"; Name : "+this.name+"; Introduced : "+ this.introducedDate +"; Discontinued : "+ this.discontinuedDate +"; "+ this.company.toString();  
-		}else {
-			str = " | Computer - Id : "+this.id+"; Name : "+this.name+"; Introduced : "+ this.introducedDate +"; Discontinued : "+ this.discontinuedDate +"; | No Company ";
-		}
-		
-		return str;
+		return "Computer{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", introducedDate='" + introducedDate + '\'' +
+                ", discontinudedDate='" + discontinuedDate + '\'' +
+                ", " + company.toString() +
+                "}\n";
 	}
-		
+	
 }
 
 

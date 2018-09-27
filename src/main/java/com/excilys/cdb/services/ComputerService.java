@@ -6,6 +6,8 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.log4j.Logger;
+
 import com.excilys.cdb.app.menus.UpdateComputerMenu;
 import com.excilys.cdb.exceptions.ComputerNameException;
 import com.excilys.cdb.exceptions.DateFormatException;
@@ -26,6 +28,8 @@ public class ComputerService {
 	private static ComputerService computerService = null;
 	private static ComputerDao computerDao = null;
 
+	private static Logger logger = Logger.getLogger(ComputerService.class);
+	
 	/**
 	 * ComputerService default constructor
 	 */
@@ -147,7 +151,6 @@ public class ComputerService {
 			}
 		} else if (columnName == UpdateComputerMenu.NAME.getColumnToUpdate()) {
 			val = MysqlStringEscape.escapeStringForMySQL(val);
-			System.out.println(val);
 			computerDao.updateComputer(id, columnName, val);
 		}
 	}
