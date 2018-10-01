@@ -18,6 +18,46 @@ public class LocalDateCheck {
 	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 	
+	public static boolean validateDates(String date1, String date2) throws DateFormatException, DateRangeException {
+		boolean valid = false;
+		
+		LocalDate date = null;
+		
+		LocalDate localDate1 = null;
+		LocalDate localDate2 = null;
+		
+		//Verifying date1 (aka: IntrodcuedDate)
+		if(validDate(date1)) {
+			if(isValidFormat(date1)) {
+				localDate1 = LocalDate.parse(date1);
+			}else {
+				throw new DateFormatException();
+			}
+		}else {
+			throw new DateFormatException();
+		}
+		
+		//Verifying date2 (aka: discontinuedDate);
+		if(validDate(date2)) {
+			if(isValidFormat(date2)) {
+				localDate2 = LocalDate.parse(date2);
+			}else {
+				throw new DateFormatException();
+			}
+		}else {
+			throw new DateFormatException();
+		}
+		
+		// Checks if discontinued date is greater or equal to introduced date
+		if (localDate1 != null && LocalDateCheck.isGreaterDate(localDate1, localDate2)) {
+			valid = true;
+		} else if(localDate1 == null && localDate2 != null){	
+			throw new DateRangeException();
+		}
+		return valid;
+	}
+	
+	
 	
 	/**
 	 * @param format dd/MM/yyyy OR yyyy-MM-dd
@@ -44,8 +84,6 @@ public class LocalDateCheck {
 	
 	public static boolean validDate(String dateString) throws DateFormatException, DateRangeException {
 		boolean valid = false;
-		
-		LocalDate date = null;
 		
 		if(!isDateStringEmpty(dateString)) {
 			if(isValidFormat(dateString)) {

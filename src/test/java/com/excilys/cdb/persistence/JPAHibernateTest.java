@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import org.apache.log4j.Logger;
 import org.h2.tools.RunScript;
 import org.hibernate.Session;
 import org.hibernate.jdbc.Work;
@@ -16,39 +17,25 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
+import com.excilys.cdb.services.ComputerService;
+
 import java.sql.Connection;
 
 public class JPAHibernateTest {
+	//Interface used to interact with the entity manager factory for the persistence unit. 
 	protected static EntityManagerFactory emf;
+	//Interface used to interact with the persistence context. 
 	protected static EntityManager em;
 	
-	// @BeforeClass : Executed only once before the entire test fixture - Only once
+	protected static Logger logger = Logger.getLogger(JPAHibernateTest.class);
+	
+
 	@BeforeClass
+	// @BeforeClass : Executed only once before the entire test fixture - Only once
 	public static void init() throws FileNotFoundException, SQLException {
+		//Should be closed
 		emf = Persistence.createEntityManagerFactory("mnf-pu-test");
 		em = emf.createEntityManager();
-	}
-	
-	
-	// @Before : Executed before each test - If 10 test => Executed 10 times
-	@Before
-	public void initializeDatabase() {
-		Session session = em.unwrap(Session.class);
-		session.doWork(new Work() {
-			@Override
-			public void execute(Connection connection) throws SQLException {
-				try {
-					File schemaScript = new File(getClass().getResource("1-SCHEMA.sql").getFile());
-					File privilegesScript = new File(getClass().getResource("2-PRIVILEGES.sql").getFile());
-					File entriesScript = new File(getClass().getResource("3-ENTRIES.sql").getFile());
-					RunScript.execute(connection, new FileReader(schemaScript));
-					RunScript.execute(connection, new FileReader(privilegesScript));
-					RunScript.execute(connection, new FileReader(entriesScript));
-				}catch(FileNotFoundException e) {
-					throw new RuntimeException("Could not intinialize with SQL script");
-				}
-			}
-		});
 	}
 	
 	@AfterClass

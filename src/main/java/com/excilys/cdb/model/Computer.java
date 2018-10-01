@@ -10,15 +10,19 @@ import javax.persistence.*;
  *
  */
 @Entity
+@Table(name="Computer")
 @NamedQueries(value = {
 	    @NamedQuery(name = "Computer.getAll", query = "SELECT compu FROM Computer compu")
 	})
 public final class Computer {
-	
+	@Id
 	private long id;
 	private String name;
-	private LocalDate introducedDate;
-	private LocalDate discontinuedDate;
+	private LocalDate introduced;
+	private LocalDate discontinued;
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name="company_id", foreignKey = @ForeignKey(name = "fk_computer_company_1"))
 	private Company company = new Company();
 
 	public Computer() {
@@ -28,8 +32,8 @@ public final class Computer {
 	public Computer(long id, String name, LocalDate introducedDate, LocalDate discontinuedDate, Company company) {
 		this.id = id;
 		this.name = name;
-		this.introducedDate = introducedDate;
-		this.discontinuedDate = discontinuedDate;
+		this.introduced = introducedDate;
+		this.discontinued = discontinuedDate;
 	}
 	
 	public void setId(long id) {
@@ -40,12 +44,12 @@ public final class Computer {
 		this.name = name;
 	}
 
-	public void setIntroducedDate(LocalDate introducedDate) {
-		this.introducedDate = introducedDate;
+	public void setIntroduced(LocalDate introducedDate) {
+		this.introduced = introducedDate;
 	}
 
-	public void setDiscontinuedDate(LocalDate discontinuedDate) {
-		this.discontinuedDate = discontinuedDate;
+	public void setDiscontinued(LocalDate discontinuedDate) {
+		this.discontinued = discontinuedDate;
 	}
 
 	public long getId() {
@@ -56,12 +60,12 @@ public final class Computer {
 		return name;
 	}
 
-	public LocalDate getIntroducedDate() {
-		return introducedDate;
+	public LocalDate getIntroduced() {
+		return introduced;
 	}
 
-	public LocalDate getDiscontinuedDate() {
-		return discontinuedDate;
+	public LocalDate getDiscontinued() {
+		return discontinued;
 	}
 	
 	public Company getCompany() {
@@ -81,8 +85,8 @@ public final class Computer {
 		return "Computer{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", introducedDate='" + introducedDate + '\'' +
-                ", discontinudedDate='" + discontinuedDate + '\'' +
+                ", introducedDate='" + introduced + '\'' +
+                ", discontinudedDate='" + discontinued + '\'' +
                 ", " + company.toString() +
                 "}\n";
 	}

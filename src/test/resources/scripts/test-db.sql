@@ -1,3 +1,31 @@
+drop schema if exists `cbd_test`;
+create schema if not exists `cbd_test`;
+use `cbd_test`;
+
+drop table if exists computer;
+drop table if exists company;
+
+create table company (
+  id                        bigint not null auto_increment,
+  name                      varchar(255),
+  constraint pk_company primary key (id))
+;
+
+create table computer (
+  id                        bigint not null auto_increment,
+  name                      varchar(255),
+  introduced                timestamp NULL,
+  discontinued              timestamp NULL,
+  company_id                bigint default NULL,
+  constraint pk_computer primary key (id));
+
+CREATE USER IF NOT EXISTS ADMINCDBTEST PASSWORD 'qwerty1234';
+
+GRANT ALL TO ADMINCDBTEST;
+
+alter table computer add constraint fk_computer_company_1 foreign key (company_id) references company (id) on delete restrict on update restrict;
+create index ix_computer_company_1 on computer (company_id);
+
 insert into company (id,name) values (  1,'Apple Inc.');
 insert into company (id,name) values (  2,'Thinking Machines');
 insert into company (id,name) values (  3,'RCA');
@@ -615,3 +643,5 @@ insert into computer (id,name,introduced,discontinued,company_id) values (571,'L
 insert into computer (id,name,introduced,discontinued,company_id) values (572,'Dell Vostro',null,null,null);
 insert into computer (id,name,introduced,discontinued,company_id) values (573,'Gateway LT3103U','2008-01-01',null,null);
 insert into computer (id,name,introduced,discontinued,company_id) values (574,'iPhone 4S','2011-10-14',null,1);
+
+

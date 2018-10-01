@@ -80,16 +80,15 @@
                    <c:forEach items="${computers}" var="computer">
         		   	<tr>
             			<td>${computer.name}</td>
-            			<td>${computer.introducedDate}</td>
-            			<td>${computer.discontinuedDate}</td>
+            			<td>${computer.introduced}</td>
+            			<td>${computer.discontinued}</td>
             			<td>
 							<c:out value="${computer.company.name}"/>
             			</td>
         			</tr>
     			   </c:forEach>
                     <tr>
-                    	
-                    
+
                     
 <!--                     
                         <td class="editMode">

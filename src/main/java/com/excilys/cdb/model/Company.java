@@ -1,5 +1,8 @@
 package com.excilys.cdb.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.*;
 
 /**
@@ -7,13 +10,14 @@ import javax.persistence.*;
  *
  */
 @Entity
+@Table(name="Company")
 @NamedQueries(value = {
 	    @NamedQuery(name = "Company.getAll", query = "SELECT compa FROM Company compa")
 	})
 public class Company {
 	@Id
 	private long id;
-	private String name;
+	private String name;	
 	
 	public Company() {
 	}

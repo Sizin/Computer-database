@@ -34,7 +34,7 @@ public class ComputerDao {
 	private static String DB_PASSWORD;
 	
 	private static final String GET_COUNT = "SELECT COUNT(id) as count FROM computer";
-	private static final String GET_ALL = "SELECT compu.id, compu.name, compu.introduced, compu.discontinued, compu.company_id, compa.name as company_name FROM computer compu LEFT JOIN company compa ON compu.id = compa.id LIMIT ?,?;";
+	private static final String GET_ALL = "SELECT compu.id, compu.name, compu.introduced, compu.discontinued, compu.company_id, compa.name as company_name FROM computer compu LEFT JOIN company compa ON compu.id = compa.id;";
 	private static final String GET_ONE = "SELECT id, name, introduced, discontinued, company_id FROM computer WHERE id=?";
 	private static final String GET_COMPUTER_WITH_COMPANY = "SELECT compu.id, compa.name as company_name FROM computer compu INNER JOIN company compa ON compu.company_id WHERE compu.id=? AND compa.id = ?;";
 	private static final String ADD = "INSERT INTO computer (name, introduced, discontinued) VALUES(?, ?, ?);";
@@ -50,19 +50,17 @@ public class ComputerDao {
 
 			InputStream inputStream = getClass().getResourceAsStream("/mysql.properties");
 			props.load(inputStream);
-			
-	
 			DB_URL = props.getProperty("DB_URL");
 			DB_USERNAME = props.getProperty("DB_USERNAME");
 			DB_PASSWORD = props.getProperty("DB_PASSWORD");
-
+			
 		}catch(IOException e) {
 			System.out.println(e);
 		}
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
-		} catch (InstantiationException e) {
+		}catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
@@ -70,7 +68,7 @@ public class ComputerDao {
 			e.printStackTrace();
 		}
 		
-		
+
 	}
 	
 	public static ComputerDao getInstance() {
@@ -79,18 +77,22 @@ public class ComputerDao {
 		}
 		return computerDao;
 	}
-
+	
+	public static ComputerDao getTestInstance() {
+		if(computerDao == null) {
+			computerDao = new ComputerDao();
+		}
+		return computerDao;
+	}
 	
 	public int getComputerCount() {
 		int rows = 0;
-		
 		try (Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)){
 			Statement getCountStmt = con.createStatement();
 			ResultSet getCountRs = getCountStmt.executeQuery(GET_COUNT);
 			if(getCountRs.next()) {
 				rows = getCountRs.getInt("count");
 			}
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}  
@@ -104,16 +106,24 @@ public class ComputerDao {
 	 * 
 	 * @return List of computers
 	 */
-	public List<Computer> getAllComputers(int limit, int range) {
+	public List<Computer> getAllComputers(int offset, int range) {
 		List<Computer> computers = new ArrayList<Computer>();
 		
 		try (Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)){
 			ComputerBuilder computerBuilder = new ComputerBuilder();
+			PreparedStatement getAllComputersStmt;
 			
-			PreparedStatement getAllComputersStmt 	= con.prepareStatement(GET_ALL);
-			getAllComputersStmt.setInt(1,limit);
-			getAllComputersStmt.setInt(2,range);
+			if(offset != 0 && range != 0) {
+				getAllComputersStmt = con.prepareStatement(GET_ALL + "LIMIT ?,?");
+				getAllComputersStmt.setInt(1,offset);
+				getAllComputersStmt.setInt(2,range);
+			}else {
+				getAllComputersStmt = con.prepareStatement(GET_ALL);
+			}
+			
+
 			ResultSet getAllComputersRs	= getAllComputersStmt.executeQuery();
+
 			
 			while(getAllComputersRs.next()) {
 								
@@ -246,24 +256,22 @@ public class ComputerDao {
 		long id = 0;
 		
 		
-		System.out.println(computer);
-		
 		try (Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)){			
 			// In order to get the last inserted ID we have to specify it here
 			PreparedStatement pStmt = con.prepareStatement(ADD, Statement.RETURN_GENERATED_KEYS);
 			
 			pStmt.setString(1, computer.getName());
 			
-			if(computer.getIntroducedDate() == null) {
+			if(computer.getIntroduced() == null) {
 				pStmt.setNull(2, java.sql.Types.DATE);
 			}else {
-				pStmt.setString(2, computer.getIntroducedDate().toString());
+				pStmt.setString(2, computer.getIntroduced().toString());
 			}
 			
-			if(computer.getDiscontinuedDate() == null) {
+			if(computer.getDiscontinued() == null) {
 				pStmt.setNull(3, java.sql.Types.DATE);
 			}else {
-				pStmt.setString(3, computer.getIntroducedDate().toString());
+				pStmt.setString(3, computer.getIntroduced().toString());
 			}
 			
 			pStmt.executeUpdate();

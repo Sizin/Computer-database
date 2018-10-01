@@ -11,14 +11,16 @@
         
         <properties>
             <!-- Configuring JDBC properties -->
-            <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:test;INIT=CREATE SCHEMA IF NOT EXISTS test\;RUNSCRIPT FROM '~/1-SCHEMA.sql'\;"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:cbd_test;INIT=RUNSCRIPT FROM '~/eclipse-workspace/Cdb/src/test/resources/scripts/test-db.sql'\;"/>
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
 
             <!-- Hibernate properties -->
             <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
-            <property name="hibernate.hbm2ddl.auto" value="validate"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
             <property name="hibernate.format_sql" value="false"/>
             <property name="hibernate.show_sql" value="true"/>
+          	<property name="javax.persistence.jdbc.user" value="ADMINCDB" />
+	        <property name="javax.persistence.jdbc.password" value="qwerty1234" />
 
         </properties>
     </persistence-unit>

@@ -45,6 +45,7 @@ public class Dashboard extends HttpServlet {
 		List<Computer> computers = new ArrayList<Computer>();
 			
 		int numberOfComputer = computerService.getComputerCount();
+		System.out.println(numberOfComputer);
 		int pageRange = request.getParameter("range") == null ? 10 : Integer.parseInt(request.getParameter("range")); 
 		int pageNumber = request.getParameter("page") == null ? 0 : Integer.parseInt(request.getParameter("page"));
 		int numberOfPage = numberOfComputer/pageRange;
