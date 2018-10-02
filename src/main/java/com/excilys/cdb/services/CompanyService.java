@@ -33,20 +33,23 @@ public class CompanyService{
 		return companyService;
 	}
 
+	public int getComputerCount() {
+		int count = companyDao.getCompanyCount();
+		return count;
+	}
+	
 	/**
 	 * Diplay all the computers
 	 *  
 	 * @return a List of computers
 	 */
-	public static List<Company> showCompanies() {
+	public List<Company> showCompanies() {
 		List<Company> companies = companyDao.getAllCompanies();
 		return companies;
 	}
 	
-	public static Optional<Company> getCompany(long id) {
-		Company company = null;
-		company = companyDao.getCompanyDetails(id);
-		return Optional.ofNullable(company);
+	public Company getCompany(Company company) {
+		return companyDao.get(company);
 	}
 	
 		

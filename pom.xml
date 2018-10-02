@@ -23,6 +23,8 @@
 		<h2.version>1.4.196</h2.version>
 		<!-- LOG4J -->
 		<log4j.version>1.2.17</log4j.version>
+		<!-- SL4J -->
+		<sl4j.version>1.7.25</sl4j.version>
 		<!-- JUNIT VERSION -->
 		<junit.version>4.12</junit.version>
 	</properties>
@@ -82,6 +84,12 @@
 			<artifactId>log4j</artifactId>
 			<version>${log4j.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${sl4j.version}</version>
+		</dependency>
+
 		<!-- TEST -->
 		<dependency>
 			<groupId>com.h2database</groupId>
@@ -95,7 +103,6 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
 
 </project>

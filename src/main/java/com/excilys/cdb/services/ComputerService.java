@@ -12,12 +12,12 @@ import com.excilys.cdb.app.menus.UpdateComputerMenu;
 import com.excilys.cdb.exceptions.ComputerNameException;
 import com.excilys.cdb.exceptions.DateFormatException;
 import com.excilys.cdb.exceptions.DateRangeException;
+import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.ComputerBuilder;
 import com.excilys.cdb.persistence.ComputerDao;
-
-import com.excilys.cdb.verifyers.LocalDateCheck;
-import com.excilys.cdb.verifyers.MysqlStringEscape;
+import com.excilys.cdb.validators.DateValidator;
+import com.excilys.cdb.validators.MysqlStringEscape;
 
 /**
  * @author Sizin Computer Service Singleton class
@@ -71,9 +71,9 @@ public class ComputerService {
 	 * @param id computer Id
 	 * @return
 	 */
-	public static Optional<Computer> showComputer(int id) {
-		Computer computer = computerDao.getComputerDetails(id);
-		return Optional.ofNullable(computer);
+	public Computer getOneComputer(int id) {
+		Computer computer = computerDao.getOne(id);
+		return computer;
 	}
 
 
@@ -88,50 +88,51 @@ public class ComputerService {
  	 * @throws DateRangeException Thrown if provided discontinued date is smaller than introduced date
 	 * @throws ComputerNameException
 	 */
-	public static long createComputer(String computerName, String introducedString, String discontinuedString)
-			throws DateFormatException, DateRangeException, ComputerNameException {
-		LocalDate introducedDate = null;
-		LocalDate discontinuedDate = null;
+//	public static long createComputer(String computerName, String introducedString, String discontinuedString)
+//			throws DateFormatException, DateRangeException, ComputerNameException {
+//		LocalDate introducedDate = null;
+//		LocalDate discontinuedDate = null;
+//
+//		ComputerBuilder computerBuilder = new ComputerBuilder();
+//		
+//		// Checks computer name string format
+//		if(computerName != null && computerName != "") {
+//			computerBuilder.setName(computerName);
+//		}else {
+//			throw new ComputerNameException();
+//		}
+//		// Checks introducedString format, if valid then converts it to LocalDate
+// 		if (LocalDateCheck.validDate(introducedString)) { 
+//			introducedDate = LocalDate.parse(introducedString);
+//			computerBuilder.setIntroducedDate(introducedDate);
+//		}
+// 		// Checks discontinuedString format, if valid then converts it to LocalDate
+//		if (LocalDateCheck.validDate(discontinuedString)) { 
+//			discontinuedDate = LocalDate.parse(discontinuedString);
+//			// Checks if discontinued date is greater or equal to introduced date
+//			if (introducedDate != null && LocalDateCheck.isGreaterDate(introducedDate, discontinuedDate)) {
+//				computerBuilder.setDiscontinuedDate(discontinuedDate);
+//			} else if(introducedDate == null && discontinuedDate != null){	
+//				throw new DateRangeException();
+//			}
+//		}
+//
+//		Computer computer = computerBuilder.build();
+//		long newId = computerDao.insertComputer(computer);
+//		
+//		return newId;
+//	}
 
-		ComputerBuilder computerBuilder = new ComputerBuilder();
-		
-		// Checks computer name string format
-		if(computerName != null && computerName != "") {
-			computerBuilder.setName(computerName);
-		}else {
-			throw new ComputerNameException();
-		}
-		// Checks introducedString format, if valid then converts it to LocalDate
- 		if (LocalDateCheck.validDate(introducedString)) { 
-			introducedDate = LocalDate.parse(introducedString);
-			computerBuilder.setIntroducedDate(introducedDate);
-		}
- 		// Checks discontinuedString format, if valid then converts it to LocalDate
-		if (LocalDateCheck.validDate(discontinuedString)) { 
-			discontinuedDate = LocalDate.parse(discontinuedString);
-			// Checks if discontinued date is greater or equal to introduced date
-			if (introducedDate != null && LocalDateCheck.isGreaterDate(introducedDate, discontinuedDate)) {
-				computerBuilder.setDiscontinuedDate(discontinuedDate);
-			} else if(introducedDate == null && discontinuedDate != null){	
-				throw new DateRangeException();
-			}
-		}
-
-		Computer computer = computerBuilder.build();
-		long newId = computerDao.insertComputer(computer);
-		
-		if (newId == 0) {
-			System.out.println("Error occured, please try again");
-		} else {
-			System.out.println("Insertion successfull, ID : " + newId);
-		}
-
+	
+	public long insertComputer(Computer computer) {
+		long newId = computerDao.add(computer);
 		return newId;
 	}
-
-	public static long assignCompanyToComputer(long computerId, long companyId) {
+	
+	
+	public long assignCompanyToComputer(long computerId, Company company) {
 		long updatedComputerId = 0;
-		updatedComputerId = computerDao.addCompany(computerId, companyId);
+		updatedComputerId = computerDao.addCompany(computerId, company.getId());
 		return updatedComputerId;
 	}
 
@@ -144,7 +145,7 @@ public class ComputerService {
 	public static void updateComputer(int id, String columnName, String val) throws DateFormatException {
 		if (columnName == UpdateComputerMenu.INTRODUCED_DATE.getColumnToUpdate()
 				|| columnName == UpdateComputerMenu.DISCONTINUED_DATE.getColumnToUpdate()) {
-			if (LocalDateCheck.isValidFormat(val)) {
+			if (DateValidator.isValidFormat(val)) {
 				computerDao.updateComputer(id, columnName, val);
 			} else {
 				throw new DateFormatException();

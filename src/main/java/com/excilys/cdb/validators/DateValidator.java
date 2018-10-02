@@ -1,4 +1,4 @@
-package com.excilys.cdb.verifyers;
+package com.excilys.cdb.validators;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,18 +13,17 @@ import java.util.Optional;
 import com.excilys.cdb.exceptions.DateFormatException;
 import com.excilys.cdb.exceptions.DateRangeException;
 
-public class LocalDateCheck {
+public class DateValidator {
 	
 	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
 	
-	public static boolean validateDates(String date1, String date2) throws DateFormatException, DateRangeException {
-		boolean valid = false;
-		
+	public static boolean checkDates(String date1, String date2) throws DateFormatException, DateRangeException {
 		LocalDate date = null;
 		
 		LocalDate localDate1 = null;
 		LocalDate localDate2 = null;
+		
+		boolean result = true;
 		
 		//Verifying date1 (aka: IntrodcuedDate)
 		if(validDate(date1)) {
@@ -41,6 +40,14 @@ public class LocalDateCheck {
 		if(validDate(date2)) {
 			if(isValidFormat(date2)) {
 				localDate2 = LocalDate.parse(date2);
+				
+				// Checks if discontinued date is greater or equal to introduced date
+				if (localDate1 != null && DateValidator.isGreaterDate(localDate1, localDate2)) {
+					result = true;
+				} else if(localDate1 == null && localDate2 != null) {
+					throw new DateRangeException();
+				}
+				
 			}else {
 				throw new DateFormatException();
 			}
@@ -48,13 +55,9 @@ public class LocalDateCheck {
 			throw new DateFormatException();
 		}
 		
-		// Checks if discontinued date is greater or equal to introduced date
-		if (localDate1 != null && LocalDateCheck.isGreaterDate(localDate1, localDate2)) {
-			valid = true;
-		} else if(localDate1 == null && localDate2 != null){	
-			throw new DateRangeException();
-		}
-		return valid;
+
+		return result;
+
 	}
 	
 	
@@ -66,25 +69,19 @@ public class LocalDateCheck {
 	 */
 	public static boolean isValidFormat(String value) {
 	    DateTimeFormatter[] formatters = {
-	    		new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd").parseDefaulting(ChronoField.HOUR_OF_DAY, 2).parseDefaulting(ChronoField.MINUTE_OF_HOUR, 2).parseDefaulting(ChronoField.SECOND_OF_MINUTE,2).toFormatter()
-	    		,new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd HH").parseDefaulting(ChronoField.MINUTE_OF_HOUR, 2).parseDefaulting(ChronoField.SECOND_OF_MINUTE,2).toFormatter()
-	    		,new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd HH:mm").parseDefaulting(ChronoField.SECOND_OF_MINUTE,2).toFormatter()
-	    		,new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd HH:mm:ss").toFormatter()
+	    		new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd HH:mm:ss.S").toFormatter()
 	    };
 	    
 	    for(DateTimeFormatter formatter: formatters) {
 	    	try {
 	    		LocalDate.parse(value, formatter);
-	    		return true;
 	    	}catch(DateTimeParseException e) {
 	    	}
 	    }
-	    return false;
+	    return true;
 	}
 	
-	public static boolean validDate(String dateString) throws DateFormatException, DateRangeException {
-		boolean valid = false;
-		
+	public static boolean validDate(String dateString) throws DateFormatException, DateRangeException {		
 		if(!isDateStringEmpty(dateString)) {
 			if(isValidFormat(dateString)) {
 				return true;

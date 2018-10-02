@@ -28,6 +28,7 @@ public class CompanyDao {
 	
 	private static final String GET_ALL = "SELECT id, name FROM company;";
 	private static final String GET_ONE = "SELECT id, name FROM company WHERE id=?;";
+	private static final String GET_COUNT = "SELECT COUNT(id) as count FROM company";
 	
 	private CompanyDao() {
 		try {			
@@ -63,13 +64,27 @@ public class CompanyDao {
 		return companyDao;
 	}
 	
+	public int getCompanyCount() {
+		int rows = 0;
+		try (Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)){
+			Statement getCountStmt = con.createStatement();
+			ResultSet getCountRs = getCountStmt.executeQuery(GET_COUNT);
+			if(getCountRs.next()) {
+				rows = getCountRs.getInt("count");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}  
+		return rows;
+	}
 	
-	public Company getCompanyDetails(long id){
-		Company company  = null;
+	
+	public Company get(Company company){
+
 		CompanyBuilder companyBuilder = new CompanyBuilder();
 		try (Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)){
 			PreparedStatement getComputerPstmt 	= con.prepareStatement(GET_ONE);
-			getComputerPstmt.setLong(1,id);
+			getComputerPstmt.setLong(1, company.getId());
 			ResultSet companyRs	= getComputerPstmt.executeQuery();
 			if(companyRs.next()) {
 				companyBuilder.setId(companyRs.getInt("id"));
@@ -81,8 +96,6 @@ public class CompanyDao {
 		}  
 		
 		return company;
-		
-		
 	}
 	
 	/**

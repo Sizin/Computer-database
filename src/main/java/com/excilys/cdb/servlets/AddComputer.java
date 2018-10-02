@@ -1,6 +1,7 @@
 package com.excilys.cdb.servlets;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -13,15 +14,24 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.excilys.cdb.dto.CompanyDto;
+import com.excilys.cdb.dto.ComputerDto;
 import com.excilys.cdb.exceptions.ComputerNameException;
 import com.excilys.cdb.exceptions.DateFormatException;
 import com.excilys.cdb.exceptions.DateRangeException;
+import com.excilys.cdb.mapper.CompanyMapper;
+import com.excilys.cdb.mapper.ComputerMapper;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.ComputerBuilder;
 import com.excilys.cdb.services.CompanyService;
 import com.excilys.cdb.services.ComputerService;
-import com.excilys.cdb.verifyers.LocalDateCheck;
+import com.excilys.cdb.validators.CompanyValidator;
+import com.excilys.cdb.validators.ComputerValidator;
+import com.excilys.cdb.validators.DateValidator;
 
 /**
  * Servlet implementation class AddComputer
@@ -30,10 +40,15 @@ import com.excilys.cdb.verifyers.LocalDateCheck;
 public class AddComputer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
+	final Logger logger = LoggerFactory.getLogger(AddComputer.class);
 
-	private  CompanyService companyService;
-	private  ComputerService computerService;
 
+	private static CompanyService companyService;
+	private static ComputerService computerService;
+
+	private static CompanyMapper companyMapper;
+	private static ComputerMapper computerMapper;
+	
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -41,6 +56,8 @@ public class AddComputer extends HttpServlet {
         super();
         this.companyService = CompanyService.getInstance();
         this.computerService = ComputerService.getInstance();
+        this.companyMapper = CompanyMapper.getInstance();
+        this.computerMapper = ComputerMapper.getInstance();
     }
 
 	/**
@@ -51,7 +68,7 @@ public class AddComputer extends HttpServlet {
 		
 		companies = companyService.showCompanies();
 		request.setAttribute("companies", companies);
-				
+
 		ServletContext sc = getServletContext();
 		sc.getRequestDispatcher("/WEB-INF/views/addComputer.jsp").forward(request, response);
 			
@@ -64,32 +81,65 @@ public class AddComputer extends HttpServlet {
 		
 		// Getting POST data
 		String computerName = request.getParameter("computerName");
+		
 		String introducedString = request.getParameter("introduced");
 		String discontinuedString = request.getParameter("discontinued");
 		String companyIdString = request.getParameter("companyId");
-		
+			
 		long newComputerId = 0;
 		
-
-		// First inserting computer
+		// Creating Computer DTO object
+		ComputerDto computerDto = new ComputerDto();
+		
 		try {
-			newComputerId = computerService.createComputer(computerName, introducedString, discontinuedString);	
-		} catch (DateFormatException | DateRangeException | ComputerNameException e) {
-			e.printStackTrace();
+			ComputerValidator.validateName(computerName);
+			computerDto.setName(computerName);			
+			
+			if(DateValidator.validDate(introducedString)) {
+				computerDto.setIntroduced(introducedString);
+				if(DateValidator.validDate(discontinuedString)) {
+					if(ComputerValidator.validateDates(introducedString, discontinuedString)) {
+						computerDto.setDiscontinued(discontinuedString);
+					}
+				}
+			}
+
+			Computer computer = computerMapper.toComputer(computerDto);
+			newComputerId = computerService.insertComputer(computer);	
+		}catch(ComputerNameException cpne) {
+			logger.info("Computer name contains invalid characters '[~#@*+%{}<>\\\\[\\\\]|\\\"\\\\_^]'");
+		}catch(DateFormatException dfe) {
+			logger.debug("Date formats should be YYYY-MM-DD");
+		}catch(DateRangeException dre) {
+			logger.debug(" Discontinued Data >= Introduced Date (null if Introduced date is null)");
 		}
+				
 		
+		//- Assigning Company to computer -\\
+		//Creating Company DTO object
+		CompanyDto companyDto = new CompanyDto();
 		
-		if(companyIdString != null && newComputerId != 0) {
-			long companyId = Integer.parseInt(companyIdString);
-			Optional<Company> company = companyService.getCompany(companyId);
-			if(company.isPresent()) {
-				newComputerId = computerService.assignCompanyToComputer(newComputerId, companyId);
+		// Getting the number or company in DB for preventing ID out of range
+		int nbCompany = companyService.getComputerCount();
+		
+		if(companyIdString != null) {
+			try {
+				CompanyValidator.validateId(companyIdString, nbCompany);
+				companyDto.setId(companyIdString);
+
+				Company company = companyService.getCompany(companyMapper.toCompany(companyDto));
+				newComputerId = computerService.assignCompanyToComputer(newComputerId, company);
+				
+			}catch(ParseException e) {
+				logger.debug("Company Id is incorredt : 0 < id < "+ nbCompany);
 			}
 		}
-	
+
 		RequestDispatcher rd = request.getRequestDispatcher("Dashboard");
 		rd.forward(request,response);
 //		doGet(request, response);
+		
+		
 	}
 	
 

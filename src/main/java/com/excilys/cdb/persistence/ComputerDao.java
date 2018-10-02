@@ -194,7 +194,7 @@ public class ComputerDao {
 	 * @param id Id of the computer
 	 * @return The corresponding computer
 	 */
-	public Computer getComputerDetails(int id) {
+	public Computer getOne(int id) {
 
 		Computer computer = null;
 				
@@ -252,10 +252,10 @@ public class ComputerDao {
 	 * @param computer object, Computer object to insert
 	 * @return the id of the new inserted row
 	 */
-	public long insertComputer(Computer computer) {
+	public long add(Computer computer) {
 		long id = 0;
 		
-		
+		System.out.println(computer);
 		try (Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)){			
 			// In order to get the last inserted ID we have to specify it here
 			PreparedStatement pStmt = con.prepareStatement(ADD, Statement.RETURN_GENERATED_KEYS);

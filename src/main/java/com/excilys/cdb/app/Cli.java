@@ -107,7 +107,7 @@ public class Cli {
 		System.out.println("-> Enter an ID ");
 		int id = scanner.nextInt();
 		
-		Optional<Computer> computer = computerService.showComputer(id);
+		Computer computer = computerService.getOneComputer(id);
 		System.out.println(computer);
 	}
 
@@ -149,11 +149,11 @@ public class Cli {
 			
 		} while (typeDiscontinued);
 
-		try {
-			computerService.createComputer(name, introduced, discontinued);
-		} catch (DateFormatException | DateRangeException | ComputerNameException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			computerService.insertComputer(name, introduced, discontinued);
+//		} catch (DateFormatException | DateRangeException | ComputerNameException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	public void updateComputer() {

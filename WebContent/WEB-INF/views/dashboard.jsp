@@ -79,25 +79,32 @@
                 <tbody id="results">
                    <c:forEach items="${computers}" var="computer">
         		   	<tr>
-            			<td>${computer.name}</td>
+            			<td><a href="/editComputer?computerId=${computer.id}">${computer.name}</a></td>
             			<td>${computer.introduced}</td>
             			<td>${computer.discontinued}</td>
             			<td>
 							<c:out value="${computer.company.name}"/>
             			</td>
+            			
+            			<td class="editMode">
+                            <input type="checkbox" name="cb" class="cb" value="0">
+                        </td>
+                        <td>
+                        	<form method="GET" action="editComputer">
+                        		<input type="hidden" name="computerId" value="${computer.id}"  />
+                        		<input class="btn btn-default" type="submit" value="Edit" >
+                        	</form>
+                        </td>
+            			
         			</tr>
     			   </c:forEach>
                     <tr>
-
-                    
-<!--                     
-                        <td class="editMode">
+<!--                    <td class="editMode">
                             <input type="checkbox" name="cb" class="cb" value="0">
                         </td>
                         <td>
                             <a href="editComputer.html" onclick="">MacBook Pro</a>
                         </td> -->
-                    
                 </tbody>
             </table>
         </div>

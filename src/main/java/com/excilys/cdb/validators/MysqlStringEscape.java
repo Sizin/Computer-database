@@ -1,4 +1,4 @@
-package com.excilys.cdb.verifyers;
+package com.excilys.cdb.validators;
 
 public class MysqlStringEscape {
 
