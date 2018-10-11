@@ -93,64 +93,48 @@
 
 
 			<ul class="pagination">
-
+				<!-- First Page -->
 				<c:if test="${currentPage != 1}">
 					<li id="firstPage"><a> <span aria-hidden="true">&laquo;</span>
 					</a></li>
 				</c:if>
+				<!-- Previous page arrow -->
 				<c:set var="rightOnly" scope="session" value="rightOnly" />
 				<c:if test="${arrowDisplay != rightOnly}">
-					<li id="previousPage"><a id="previousPage"> <span
-							aria-hidden="true">&lt;</span>
+					<li id="previousPage"><a id="previousPage">
+					<span aria-hidden="true">&lt;</span>
 					</a></li>
 				</c:if>
-				<li class="page-item  active" id="currentPage"
-					value=<c:out value="${currentPage}"/>><a><c:out
-							value="${currentPage}" /> </a></li>
-							
-				<c:if test="${currentPage <= numberOfPage - 2}">
-					<li class="page-item" value=<c:out value="${currentPage + 1}"/>>
-						<a><c:out value="${currentPage + 1}" /> </a>
+				
+ 				<c:forEach begin="${currentStartPage}" end="${currentEndPage}" varStatus="paginationLoop">
+					<li class="${currentPage == (paginationLoop.index) ? "page-item active" : "page-item"}"  <c:if test="${currentPage == (paginationLoop.index)}">id="currentPage"</c:if> value="${paginationLoop.index}">
+						<a>
+							${paginationLoop.index}
+						</a>
 					</li>
-
+				</c:forEach>
+			
+				<!-- Next page arrow -->
+				 <c:set var="leftOnly" value="leftOnly" /> 
+				 <c:if test="${arrowDisplay != leftOnly}">
+					<li id="nextPage"><a id="nextPage"> <span aria-hidden="true">&gt;</span>
+					</a></li>
 				</c:if>
-
-						<c:if test="${currentPage <= numberOfPage - 4}">
-							<li class="page-item" value=<c:out value="${currentPage + 3}"/>>
-								<a><c:out value="${currentPage + 3}" /> </a>
-
-							</li>
-
+				<!-- Last page arrows  -->
+				<c:if test="${currentPage < numberOfPage}">
+					<li id="lastPage" value=<c:out value="${numberOfPage}"/>>
+						<a>
+						<span aria-hidden="true">&raquo;</span>
+						</a>
+					</li>
+				</c:if>
 					
-						</c:if>
-
-						<c:if test="${currentPage <= numberOfPage - 5}">
-								<li class="page-item" value=<c:out value="${currentPage + 4}"/>>
-									<a><c:out value="${currentPage + 4}" /> </a>
-								</li>
-							</c:if>
-
-
-					 <c:set var="leftOnly" value="leftOnly" /> 
-					 <c:if test="${arrowDisplay != leftOnly}">
-						<li id="nextPage"><a id="previousPage"> <span aria-hidden="true">&gt;</span>
-						</a></li>
-
-						<c:if test="${currentPage < numberOfPage}">
-							<li id="lastPage" value=<c:out value="${numberOfPage}"/>><a>
-									<span aria-hidden="true">&raquo;</span>
-							</a></li>
-						</c:if>
-					</c:if>
 			</ul>
 
 			<div class="btn-group btn-group-sm pull-right" role="group">
-				<button type="button" class="btn btn-default pageRange" id="range10"
-					value="10">10</button>
-				<button type="button" class="btn btn-default pageRange" id="range50"
-					value="50">50</button>
-				<button type="button" class="btn btn-default pageRange"
-					id="range100" value="100">100</button>
+				<button type="button" class="${resultPerPage == 10 ? "btn btn-default pageRange active" : "btn btn-default pageRange"}" id="range10" value="10">10</button>
+				<button type="button" class="${resultPerPage == 50 ? "btn btn-default pageRange active" : "btn btn-default pageRange"}" id="range50" value="50">50</button>
+				<button type="button" class="${resultPerPage == 100 ? "btn btn-default pageRange active" : "btn btn-default pageRange"}"	id="range100" value="100">100</button>
 			</div>
 		</div>
 	</footer>

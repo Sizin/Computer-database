@@ -48,8 +48,6 @@ public class Dashboard extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
-		logger.info("DoGet");
 		
 		String search = request.getParameter("search");
 
@@ -69,8 +67,7 @@ public class Dashboard extends HttpServlet {
 			computers = computerService.searchComputer(computerPagination.getCurrentPage(),
 					computerPagination.getResultPerPage(), search);
 		} else {
-			computers = computerService.showComputers(computerPagination.getCurrentPage(),
-					computerPagination.getResultPerPage());
+			computers = computerService.showComputers(computerPagination.getCurrentPage(),	computerPagination.getResultPerPage());
 		}
 
 		request.setAttribute("listComputer", computers);
@@ -93,8 +90,6 @@ public class Dashboard extends HttpServlet {
 			throws ServletException, IOException {
 
 		String word = request.getParameter("search");
-
-		System.out.println(word);
 		request.setAttribute("search", word);
 		doGet(request, response);
 	}
