@@ -31,16 +31,16 @@ public class ComputerDao {
 	private static String DB_PASSWORD;
 	private static String DB_DRIVER;
 	
-	private static final String GET_COUNT = "SELECT COUNT(id) as count FROM computer";
-	private static final String GET_ALL = "SELECT compu.id, compu.name, compu.introduced, compu.discontinued, compu.company_id, compa.name as company_name FROM computer compu LEFT JOIN company compa ON compu.id = compa.id ";
 	private static final String GET = "SELECT id, name, introduced, discontinued, company_id FROM computer WHERE id=?";
-	private static final String GET_COMPUTER_WITH_COMPANY = "SELECT compu.id, compa.name as company_name FROM computer compu LEFT JOIN company compa ON compu.company_id WHERE compu.id=? AND compa.id = ?;";
+	private static final String GET_ALL = "SELECT compu.id, compu.name, compu.introduced, compu.discontinued, compu.company_id, compa.name as company_name FROM computer compu LEFT JOIN company compa ON compu.id = compa.id ";
+	private static final String GET_COMPUTER_AND_COMPANY = "SELECT compu.id, compa.name as company_name FROM computer compu LEFT JOIN company compa ON compu.company_id WHERE compu.id=? AND compa.id = ?;";
+	private static final String GET_COUNT = "SELECT COUNT(id) as count FROM computer";
 	private static final String ADD = "INSERT INTO computer (name, introduced, discontinued) VALUES(?, ?, ?);";
 	private static final String ADD_COMPANY = "UPDATE computer SET company_id= ? WHERE id=?";
-	private static final String UPDATE_ONE_COLUMN = "UPDATE computer SET [*column*] = ? WHERE id=?;";
 	private static final String UPDATE = "UPDATE computer SET name = ?, introduced = ?, discontinued = ? WHERE id = ?";
-	private static final String DELETE_ONE = "DELETE FROM computer WHERE id=?;";
-	private static final String SEARCH = "SELECT compu.id, compu.name, compu.introduced, compu.discontinued, compu.company_id, compa.name as company_name FROM computer compu LEFT JOIN company compa ON compu.id = compa.id  WHERE computer.name LIKE ? ";
+	private static final String UPDATE_COLUMN = "UPDATE computer SET [*column*] = ? WHERE id=?;";
+	private static final String DELETE = "DELETE FROM computer WHERE id=?;";
+	private static final String SEARCH_LIKE = "SELECT compu.id, compu.name, compu.introduced, compu.discontinued, compu.company_id, compa.name as company_name FROM computer compu LEFT JOIN company compa ON compu.id = compa.id  WHERE compu.name LIKE ? ";
 	
 	
 	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
@@ -234,7 +234,7 @@ public class ComputerDao {
 				
 				int companyId = getComputerRs.getInt("company_id");
 				if (companyId != 0) {
-					PreparedStatement getComputerAndCompanyPStmt = con.prepareStatement(GET_COMPUTER_WITH_COMPANY);
+					PreparedStatement getComputerAndCompanyPStmt = con.prepareStatement(GET_COMPUTER_AND_COMPANY);
 					getComputerAndCompanyPStmt.setInt(1, id);
 					getComputerAndCompanyPStmt.setInt(2, companyId);
 					ResultSet getComputerCompanyRs = getComputerAndCompanyPStmt.executeQuery();
@@ -309,7 +309,7 @@ public class ComputerDao {
 		try (Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)){
 			//As we cant supply identifyers as PreparedStatemnt bind parameters we use a str replace to set the right column name
 			// In order to get the last inserted ID we have to specify it here
-			PreparedStatement pStmt = con.prepareStatement(UPDATE_ONE_COLUMN.replace("[*column*]", "`" + column +"`"), Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement pStmt = con.prepareStatement(UPDATE_COLUMN.replace("[*column*]", "`" + column +"`"), Statement.RETURN_GENERATED_KEYS);
 			// Value to update with
 			pStmt.setString(1, value);
 			// Id of the computer to update
@@ -389,7 +389,7 @@ public class ComputerDao {
 	 */
 	public void deleteComputer(Computer computer) {
 		try (Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)){
-			PreparedStatement pStmt = con.prepareStatement(DELETE_ONE);
+			PreparedStatement pStmt = con.prepareStatement(DELETE);
 			pStmt.setLong(1, computer.getId());
 			pStmt.executeUpdate();
 			
@@ -401,42 +401,24 @@ public class ComputerDao {
 	public List<Computer> search(int offset, int range, String search ) {
 		List<Computer> matchingComputers = new ArrayList<Computer>();
 		
-		
-		
-		
-		try (Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)){
-			PreparedStatement pStmt = con.prepareStatement(SEARCH + "LIMIT ?, ?");
-			
-			pStmt.setString(1, search );
-
-			int page = (offset == 1) ? offset : offset*range;
-			pStmt.setInt(2,page);
-			pStmt.setInt(3,range);
-			pStmt.executeQuery();
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} 
-		
 		try (Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)){
 			ComputerBuilder computerBuilder = new ComputerBuilder();
 			PreparedStatement getAllComputersStmt;
 			
 			if(offset != 0 && range != 0) {
-				getAllComputersStmt = con.prepareStatement(SEARCH + "LIMIT ?, ?");
+				getAllComputersStmt = con.prepareStatement(SEARCH_LIKE + "LIMIT ?, ?");
 				
-				getAllComputersStmt.setString(1, search );
+				getAllComputersStmt.setString(1, "%"+search+"%");
 				
 				int page = (offset == 1) ? offset : offset*range;
 				
 				getAllComputersStmt.setInt(2,page);
 				getAllComputersStmt.setInt(3,range);
 			}else {
-				getAllComputersStmt = con.prepareStatement(SEARCH);
+				getAllComputersStmt = con.prepareStatement(SEARCH_LIKE);
 				getAllComputersStmt.setString(1, search);
 			}
 			
-
 			ResultSet getAllComputersRs	= getAllComputersStmt.executeQuery();
 
 			
