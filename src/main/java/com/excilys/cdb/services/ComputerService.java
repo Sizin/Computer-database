@@ -49,19 +49,25 @@ public class ComputerService {
 		int count = computerDao.getComputerCount();
 		return count;
 	}
+	
+	public int getComputerCount(String search) {
+		int count = computerDao.getComputerCount(search);
+		return count;
+	}
+	
 
+	public List<Computer> showComputers(int limit, int range) {
+		List<Computer> computers = computerDao.getAllComputers(limit, range, null);
+		return computers;
+	}
+	
 	/**
 	 * Diplay all the computers
 	 * 
 	 * @return a List of computers
 	 */
-	public List<Computer> showComputers(int limit, int range) {
-		List<Computer> computers = computerDao.getAllComputers(limit, range);
-		return computers;
-	}
-	
-	public List<Computer> searchComputer(int limit, int range, String word){
-		List<Computer> computers = computerDao.search(limit, range, word);
+	public List<Computer> showComputers(int limit, int range, String search) {
+		List<Computer> computers = computerDao.getAllComputers(limit, range, search);
 		return computers;
 	}
 

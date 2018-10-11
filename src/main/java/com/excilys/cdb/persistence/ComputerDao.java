@@ -20,11 +20,15 @@ import java.util.Properties;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.ComputerBuilder;
+import com.zaxxer.hikari.HikariConfig;
 
 
 public class ComputerDao {
 	
 	private static ComputerDao computerDao = null;
+	
+	private Datasource dbConnection;
+	
 	
 	private static String DB_URL;
 	private static String DB_USERNAME;
@@ -35,12 +39,13 @@ public class ComputerDao {
 	private static final String GET_ALL = "SELECT compu.id, compu.name, compu.introduced, compu.discontinued, compu.company_id, compa.name as company_name FROM computer compu LEFT JOIN company compa ON compu.id = compa.id ";
 	private static final String GET_COMPUTER_AND_COMPANY = "SELECT compu.id, compa.name as company_name FROM computer compu LEFT JOIN company compa ON compu.company_id WHERE compu.id=? AND compa.id = ?;";
 	private static final String GET_COUNT = "SELECT COUNT(id) as count FROM computer";
+	private static final String GET_COUNT_SEARCH = "SELECT COUNT(id) as count FROM computer WHERE name LIKE ?";
 	private static final String ADD = "INSERT INTO computer (name, introduced, discontinued) VALUES(?, ?, ?);";
 	private static final String ADD_COMPANY = "UPDATE computer SET company_id= ? WHERE id=?";
 	private static final String UPDATE = "UPDATE computer SET name = ?, introduced = ?, discontinued = ? WHERE id = ?";
 	private static final String UPDATE_COLUMN = "UPDATE computer SET [*column*] = ? WHERE id=?;";
 	private static final String DELETE = "DELETE FROM computer WHERE id=?;";
-	private static final String SEARCH_LIKE = "SELECT compu.id, compu.name, compu.introduced, compu.discontinued, compu.company_id, compa.name as company_name FROM computer compu LEFT JOIN company compa ON compu.id = compa.id  WHERE compu.name LIKE ? ";
+	private static final String SEARCH_LIKE = "SELECT compu.id, compu.name, compu.introduced, compu.discontinued, compu.company_id, compa.name as company_name FROM computer compu LEFT JOIN company compa ON compu.id = compa.id  WHERE compu.name LIKE ? ORDER BY compu.name ASC ";
 	
 	
 	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
@@ -55,6 +60,8 @@ public class ComputerDao {
 			DB_USERNAME = props.getProperty("DB_USERNAME");
 			DB_PASSWORD = props.getProperty("DB_PASSWORD");
 			DB_DRIVER = props.getProperty("DB_DRIVER");
+			
+			dbConnection = Datasource.getInstance();
 			
 		}catch(IOException e) {
 			System.out.println(e);
@@ -78,16 +85,9 @@ public class ComputerDao {
 		return computerDao;
 	}
 	
-	public static ComputerDao getTestInstance() {
-		if(computerDao == null) {
-			computerDao = new ComputerDao();
-		}
-		return computerDao;
-	}
-	
 	public int getComputerCount() {
 		int rows = 0;
-		try (Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)){
+		try (Connection con = dbConnection.getConnection()){
 			Statement getCountStmt = con.createStatement();
 			ResultSet getCountRs = getCountStmt.executeQuery(GET_COUNT);
 			if(getCountRs.next()) {
@@ -100,34 +100,66 @@ public class ComputerDao {
 		return rows;
 	}
 	
+	public int getComputerCount(String search) {
+		int rows = 0;
+		
+		try (Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)){
+			
+			PreparedStatement getCountSearchpStmt = con.prepareStatement(GET_COUNT_SEARCH);
+			getCountSearchpStmt.setString(1, search);
+			ResultSet getCountSearchRs = getCountSearchpStmt.executeQuery();
+			
+			if(getCountSearchRs.next()) {
+				rows = getCountSearchRs.getInt("count");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}  
+		
+		return rows;
+	}
 	
 	/**
 	 * Retrieves all the computers from the computer table
 	 * 
 	 * @return List of computers
 	 */
-	public List<Computer> getAllComputers(int offset, int range) {
+	public List<Computer> getAllComputers(int offset, int range, String search) {
 		List<Computer> computers = new ArrayList<Computer>();
 		
 		try (Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)){
 			ComputerBuilder computerBuilder = new ComputerBuilder();
 			PreparedStatement getAllComputersStmt;
 			
-			if(offset != 0 && range != 0) {
-				getAllComputersStmt = con.prepareStatement(GET_ALL + "LIMIT ?, ?");
-				
-				int page = (offset == 1) ? offset : offset*range;
-				
-				getAllComputersStmt.setInt(1,page);
-				getAllComputersStmt.setInt(2,range);
+			if(search == null) {
+				if(offset != 0 && range != 0) {
+					getAllComputersStmt = con.prepareStatement(GET_ALL + "LIMIT ?, ?");
+					
+					int page = (offset == 1) ? offset : offset*range;
+					
+					getAllComputersStmt.setInt(1,page);
+					getAllComputersStmt.setInt(2,range);
+				}else {
+					getAllComputersStmt = con.prepareStatement(GET_ALL);
+				}
 			}else {
-				getAllComputersStmt = con.prepareStatement(GET_ALL);
+				if(offset != 0 && range != 0) {
+					getAllComputersStmt = con.prepareStatement(SEARCH_LIKE + " LIMIT ?, ?");
+					
+					getAllComputersStmt.setString(1, "%"+search+"%");
+					
+					int page = (offset == 1) ? offset : offset*range;
+					
+					getAllComputersStmt.setInt(2,page);
+					getAllComputersStmt.setInt(3,range);
+				}else {
+					getAllComputersStmt = con.prepareStatement(SEARCH_LIKE);
+					getAllComputersStmt.setString(1, search);
+				}
 			}
-			
 
 			ResultSet getAllComputersRs	= getAllComputersStmt.executeQuery();
 
-			
 			while(getAllComputersRs.next()) {
 								
 				String introducedString  = getAllComputersRs.getString("introduced");
@@ -147,7 +179,6 @@ public class ComputerDao {
 					LocalDate discontinuedDate = LocalDate.parse(discontinuedString, formatter );
 					computerBuilder.setDiscontinuedDate(discontinuedDate);
 				}
-				
 				
 				Computer computer = computerBuilder.build();
 				
@@ -397,75 +428,5 @@ public class ComputerDao {
 			e.printStackTrace();
 		} 
 	}
-	
-	public List<Computer> search(int offset, int range, String search ) {
-		List<Computer> matchingComputers = new ArrayList<Computer>();
-		
-		try (Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)){
-			ComputerBuilder computerBuilder = new ComputerBuilder();
-			PreparedStatement getAllComputersStmt;
-			
-			if(offset != 0 && range != 0) {
-				getAllComputersStmt = con.prepareStatement(SEARCH_LIKE + "LIMIT ?, ?");
-				
-				getAllComputersStmt.setString(1, "%"+search+"%");
-				
-				int page = (offset == 1) ? offset : offset*range;
-				
-				getAllComputersStmt.setInt(2,page);
-				getAllComputersStmt.setInt(3,range);
-			}else {
-				getAllComputersStmt = con.prepareStatement(SEARCH_LIKE);
-				getAllComputersStmt.setString(1, search);
-			}
-			
-			ResultSet getAllComputersRs	= getAllComputersStmt.executeQuery();
-
-			
-			while(getAllComputersRs.next()) {
-								
-				String introducedString  = getAllComputersRs.getString("introduced");
-				String discontinuedString = getAllComputersRs.getString("discontinued");
-
-				computerBuilder.setId(getAllComputersRs.getLong("id"));
-				computerBuilder.setName(getAllComputersRs.getString("name"));
-
-				// Checking if introduced date is not null
-				if (introducedString != null) {
-					LocalDate introducedDate = LocalDate.parse(introducedString, formatter);
-					computerBuilder.setIntroducedDate(introducedDate);
-				}
-								
-				// Checking if discontinued date is not null
-				if(discontinuedString != null) {
-					LocalDate discontinuedDate = LocalDate.parse(discontinuedString, formatter );
-					computerBuilder.setDiscontinuedDate(discontinuedDate);
-				}
-				
-				
-				Computer computer = computerBuilder.build();
-				
-				int companyId = getAllComputersRs.getInt("company_id");
-
-				if (companyId != 0) {
-						String companyName = getAllComputersRs.getString("company_name");
-						Company company = new Company(companyId, companyName);
-						computer.setCompany(company);
-
-				}
-				matchingComputers.add(computer);
-			}
-				
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}  
-		return matchingComputers;
-		
-		
-		
-		
-	}
-	
-	
 	
 }

@@ -60,14 +60,20 @@ public class Dashboard extends HttpServlet {
 			computerPagination.setCurrentPage(Integer.parseInt(request.getParameter("page")));
 		}
 
-		computerPagination.setPages();
-
 		if (search != "" && search != null) {
 			logger.info("User search");
-			computers = computerService.searchComputer(computerPagination.getCurrentPage(),
-					computerPagination.getResultPerPage(), search);
-		} else {
-			computers = computerService.showComputers(computerPagination.getCurrentPage(),	computerPagination.getResultPerPage());
+			// Setting the searched word in the Pagination class cause it impacts it directly
+			computerPagination.setSearchedWord(search);
+			computerPagination.setPages();
+			computers = computerService.showComputers(computerPagination.getCurrentPage(),	computerPagination.getResultPerPage(), search);
+			
+		}else if(computerPagination.getSearchedWord() != null && computerPagination.getSearchedWord() != "") {
+			computerPagination.setPages();
+			computers = computerService.showComputers(computerPagination.getCurrentPage(),	computerPagination.getResultPerPage(), computerPagination.getSearchedWord());
+		}else {
+			computerPagination.setSearchedWord("");
+			computerPagination.setPages();
+			computers = computerService.showComputers(computerPagination.getCurrentPage(),	computerPagination.getResultPerPage(), computerPagination.getSearchedWord());
 		}
 
 		request.setAttribute("listComputer", computers);

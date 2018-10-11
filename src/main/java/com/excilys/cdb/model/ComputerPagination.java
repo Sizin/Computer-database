@@ -17,6 +17,8 @@ public class ComputerPagination {
 	
 	protected String arrowDisplay;
 	
+	protected String searchedWord;
+	
 	private ComputerPagination() {
 		computerService = ComputerService.getInstance();
 		numberOfComputer = computerService.getComputerCount();
@@ -37,6 +39,11 @@ public class ComputerPagination {
 	
 	public void setPages() {
 
+		if(searchedWord != null && searchedWord != "") {
+			numberOfComputer = computerService.getComputerCount(searchedWord);
+			nbPage = numberOfComputer/resultPerPage;
+		}
+		
 		if(nbPage > 5 ) {
 			//  If we're at first page range (1-5)
 			if(currentPage < 5) {
@@ -47,14 +54,11 @@ public class ComputerPagination {
 				// We are at the start range
 				arrowDisplay = "rightOnly";
 				
-			
-				
 			}else if(currentPage >= 5 && currentPage < (nbPage - 5)) {
 				
 				currentStartPage = currentPage - 2;
 				currentEndPage = currentPage + 2;
 				arrowDisplay = "all";
-				
 				
 			}else if ( currentPage >= (nbPage - 5) ) {
 				currentStartPage = nbPage - 5;
@@ -62,16 +66,14 @@ public class ComputerPagination {
 				arrowDisplay = "leftOnly";
 			}
 			
-			
-				
 		}else if (nbPage <= 5) {
 			
 			currentStartPage = 1;
 			currentEndPage = nbPage;
-			arrowDisplay = "rightOnly";
+			arrowDisplay = "none";
 			
 		}
-		
+
 	}
 	
 	
@@ -146,6 +148,14 @@ public class ComputerPagination {
 
 	public void setArrowDisplay(String arrowDisplay) {
 		this.arrowDisplay = arrowDisplay;
+	}
+
+	public String getSearchedWord() {
+		return searchedWord;
+	}
+
+	public void setSearchedWord(String searchedWord) {
+		this.searchedWord = searchedWord;
 	}
 
 	

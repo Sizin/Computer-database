@@ -22,7 +22,7 @@
 
 	<section id="main">
 		<div class="container">
-			<h1 id="homeTitle">${numberOfComputer}Computersfound</h1>
+			<h1 id="homeTitle">${numberOfComputer} Computers found</h1>
 			<div id="actions" class="form-horizontal">
 				<div class="pull-left">
 					<form id="searchForm" action="Dashboard" method="GET" class="form-inline">
@@ -99,8 +99,10 @@
 					</a></li>
 				</c:if>
 				<!-- Previous page arrow -->
+				
 				<c:set var="rightOnly" scope="session" value="rightOnly" />
-				<c:if test="${arrowDisplay != rightOnly}">
+				<c:set var="none" value="none" /> 
+				<c:if test="${arrowDisplay != rightOnly && arrowDisplay != none}">
 					<li id="previousPage"><a id="previousPage">
 					<span aria-hidden="true">&lt;</span>
 					</a></li>
@@ -116,7 +118,7 @@
 			
 				<!-- Next page arrow -->
 				 <c:set var="leftOnly" value="leftOnly" /> 
-				 <c:if test="${arrowDisplay != leftOnly}">
+				 <c:if test="${arrowDisplay != leftOnly && arrowDisplay != none}">
 					<li id="nextPage"><a id="nextPage"> <span aria-hidden="true">&gt;</span>
 					</a></li>
 				</c:if>
