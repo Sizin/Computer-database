@@ -14,8 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 import com.excilys.cdb.dto.CompanyDto;
 import com.excilys.cdb.dto.ComputerDto;
@@ -38,8 +37,8 @@ import com.excilys.cdb.validators.DateValidator;
 @WebServlet("/addComputer")
 public class AddComputer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	
-	final Logger logger = LoggerFactory.getLogger(AddComputer.class);
+
+	final static Logger logger = Logger.getLogger(Dashboard.class);
 
 
 	private static CompanyService companyService;
@@ -106,11 +105,11 @@ public class AddComputer extends HttpServlet {
 			Computer computer = computerMapper.toComputer(computerDto);
 			newComputerId = computerService.insertComputer(computer);	
 		}catch(ComputerNameException cpne) {
-			logger.info("Computer name contains invalid characters '[~#@*+%{}<>\\\\[\\\\]|\\\"\\\\_^]'");
+			logger.error("Computer name contains invalid characters '[~#@*+%{}<>\\\\[\\\\]|\\\"\\\\_^]'", cpne);
 		}catch(DateFormatException dfe) {
-			logger.debug("Date formats should be YYYY-MM-DD");
+			logger.error("Date formats should be YYYY-MM-DD", dfe);
 		}catch(DateRangeException dre) {
-			logger.debug(" Discontinued Data >= Introduced Date (null if Introduced date is null)");
+			logger.error(" Discontinued Data >= Introduced Date (null if Introduced date is null)", dre);
 		}
 				
 		
@@ -130,7 +129,7 @@ public class AddComputer extends HttpServlet {
 				computerService.assignCompanyToComputer(newComputerId, company);
 				
 			}catch(ParseException e) {
-				logger.debug("Company Id is incorredt : 0 < id < "+ nbCompany);
+				logger.error("Company Id is incorredt : 0 < id < "+ nbCompany, e);
 			}
 		}
 
