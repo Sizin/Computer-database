@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.excilys.cdb.dto.CompanyDto;
+import com.excilys.cdb.dto.ComputerDto;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.CompanyBuilder;
 import com.excilys.cdb.model.ComputerBuilder;
@@ -38,7 +39,17 @@ public class CompanyMapper {
 	}
 	
 	public CompanyDto toCompanyDto(Company company) {
-		return null;
+		CompanyDto companyDto = new CompanyDto();
+		
+		if(company.getId() >= 0) {
+			companyDto.setId(String.valueOf(company.getId()));
+		}
+		
+		if(company.getName() != null) {
+			companyDto.setName(company.getName());
+		}
+		
+		return companyDto;
 	}
 	
 	public List<Company> toCompanies(List<CompanyDto> companiesDto){

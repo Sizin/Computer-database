@@ -3,6 +3,7 @@ package com.excilys.cdb.mapper;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import com.excilys.cdb.dto.CompanyDto;
 import com.excilys.cdb.dto.ComputerDto;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.ComputerBuilder;
@@ -46,8 +47,8 @@ public class ComputerMapper {
 			}
 		}
 		
-		if(computerDto.getCompanyDto() != null) {
-			computerBuilder.setCompany(companyMapper.toCompany(computerDto.getCompanyDto()));
+		if(computerDto.getCompany() != null) {
+			computerBuilder.setCompany(companyMapper.toCompany(computerDto.getCompany()));
 		}
 
 		Computer computer = computerBuilder.build();
@@ -74,8 +75,13 @@ public class ComputerMapper {
 			computerDto.setDiscontinued(computer.getDiscontinued().toString());
 		}
 		
-		return computerDto;
+		if(computer.getCompany() != null) {
+			computerDto.setCompany(companyMapper.toCompanyDto(computer.getCompany()));
+		}
 		
+		CompanyDto cpt = companyMapper.toCompanyDto(computer.getCompany());
+		
+		return computerDto;
 	}
 	
 	

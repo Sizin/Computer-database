@@ -93,12 +93,20 @@ public class DateValidator {
 		}
 	}
 	
-	public static boolean isGreaterDate(LocalDate date1, LocalDate date2) {	
-		if(date1.compareTo(date2) <= 0) { // if introduced date greater or equal to introducedDate
-			return true;
-		}else {
-			return false;
+	public static boolean isGreaterDate(LocalDate date1, LocalDate date2) throws DateRangeException {	
+		if(date1 == null) {
+			throw new DateRangeException();
 		}
+		if(date2 != null ) {
+			if(date1.compareTo(date2) <= 0) { // if introduced date greater or equal to introducedDate
+				return true;
+			}else {
+				throw new DateRangeException();
+			}
+		}else {
+			return true;
+		}
+
 	}
 	
 	public static boolean isDateStringEmpty(String dateString) {

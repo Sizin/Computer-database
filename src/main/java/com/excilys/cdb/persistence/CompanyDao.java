@@ -87,8 +87,7 @@ public class CompanyDao {
 			getComputerPstmt.setLong(1, company.getId());
 			ResultSet companyRs	= getComputerPstmt.executeQuery();
 			if(companyRs.next()) {
-				companyBuilder.setId(companyRs.getInt("id"));
-				companyBuilder.setName(companyRs.getString("name"));
+				companyBuilder.setId(companyRs.getInt("id")).setName(companyRs.getString("name"));
 				company = companyBuilder.build();
 			}
 		} catch (SQLException e) {

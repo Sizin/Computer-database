@@ -90,7 +90,7 @@ public class Cli {
 	}
 
 	public void showComputers() {
-		List<Computer> computers = ComputerService.showComputers(10,10);
+		List<Computer> computers = computerService.showComputers(10,10);
 		for (Computer computer : computers) {
 			System.out.println(computer.toString());
 		}

@@ -26,7 +26,6 @@ import com.excilys.cdb.mapper.CompanyMapper;
 import com.excilys.cdb.mapper.ComputerMapper;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
-import com.excilys.cdb.model.ComputerBuilder;
 import com.excilys.cdb.services.CompanyService;
 import com.excilys.cdb.services.ComputerService;
 import com.excilys.cdb.validators.CompanyValidator;
@@ -128,7 +127,7 @@ public class AddComputer extends HttpServlet {
 				companyDto.setId(companyIdString);
 
 				Company company = companyService.getCompany(companyMapper.toCompany(companyDto));
-				newComputerId = computerService.assignCompanyToComputer(newComputerId, company);
+				computerService.assignCompanyToComputer(newComputerId, company);
 				
 			}catch(ParseException e) {
 				logger.debug("Company Id is incorredt : 0 < id < "+ nbCompany);

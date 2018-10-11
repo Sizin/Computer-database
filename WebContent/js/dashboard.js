@@ -56,16 +56,39 @@ $(function() {
 //Set result per page
 $(".pageRange").click(function() {
 	var range = $(this).attr("value");
-	document.location.href = '/CdbSinan/Dashboard?range='+range
-
+	document.location =  "/CdbSinan/Dashboard?range="+range;
+	
+	
+	
 });
 
-
-$(".test").click(function() {
+$(".page-item").click(function(){
 	var page = $(this).attr("value");
-	console.log(page);
+	document.location =  "/CdbSinan/Dashboard?page="+page;
 });
 
+$("#firstPage").click(function(){
+	document.location = "/CdbSinan/Dashboard?page=1";
+});
+
+$("#nextPage").click(function(){
+	var currentPage = $("#currentPage").attr("value");
+	currentPage = parseInt(currentPage);
+	var pageToGo = currentPage + 1;
+	document.location = "/CdbSinan/Dashboard?page=" + pageToGo;
+});
+
+$("#previousPage").click(function(){
+	var currentPage = $("#currentPage").attr("value");
+	currentPage = parseInt(currentPage);
+	var pageToGo = currentPage - 1;
+	document.location = "/CdbSinan/Dashboard?page=" + pageToGo;
+});
+
+$("#lastPage").click(function(){
+	var lastPage = $("#lastPage").attr("value");
+	document.location = "/CdbSinan/Dashboard?page=" + lastPage;
+});
 
 
 

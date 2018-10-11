@@ -6,7 +6,7 @@ public class ComputerDto {
 	private String introduced;
 	private String discontinued;
 	
-	private CompanyDto companyDto;
+	private CompanyDto company;
 	
 	public ComputerDto() {
 		
@@ -37,15 +37,12 @@ public class ComputerDto {
 		this.discontinued = discontinued;
 	}
 
-	public CompanyDto getCompanyDto() {
-		return companyDto;
+	public CompanyDto getCompany() {
+		return company;
 	}
 
-	public void setCompanyDto(CompanyDto companyDto) {
-		this.companyDto = companyDto;
+	public void setCompany(CompanyDto companyDto) {
+		this.company = companyDto;
 	}
-
-
-
 
 }

@@ -1,0 +1,15 @@
+.page-item{
+cursor:pointer	
+}
+#previousPage{
+	cursor:pointer
+}
+#nextPage{
+	cursor:pointer
+}
+#lastPage{
+	cursor:pointer
+}
+#firstPage{
+	cursor:pointer
+}

@@ -10,20 +10,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Types;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import javax.swing.plaf.synth.SynthSpinnerUI;
 
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.ComputerBuilder;
 
-import java.util.Optional;
 
 public class ComputerDao {
 	
@@ -32,15 +29,19 @@ public class ComputerDao {
 	private static String DB_URL;
 	private static String DB_USERNAME;
 	private static String DB_PASSWORD;
+	private static String DB_DRIVER;
 	
 	private static final String GET_COUNT = "SELECT COUNT(id) as count FROM computer";
-	private static final String GET_ALL = "SELECT compu.id, compu.name, compu.introduced, compu.discontinued, compu.company_id, compa.name as company_name FROM computer compu LEFT JOIN company compa ON compu.id = compa.id;";
-	private static final String GET_ONE = "SELECT id, name, introduced, discontinued, company_id FROM computer WHERE id=?";
-	private static final String GET_COMPUTER_WITH_COMPANY = "SELECT compu.id, compa.name as company_name FROM computer compu INNER JOIN company compa ON compu.company_id WHERE compu.id=? AND compa.id = ?;";
+	private static final String GET_ALL = "SELECT compu.id, compu.name, compu.introduced, compu.discontinued, compu.company_id, compa.name as company_name FROM computer compu LEFT JOIN company compa ON compu.id = compa.id ";
+	private static final String GET = "SELECT id, name, introduced, discontinued, company_id FROM computer WHERE id=?";
+	private static final String GET_COMPUTER_WITH_COMPANY = "SELECT compu.id, compa.name as company_name FROM computer compu LEFT JOIN company compa ON compu.company_id WHERE compu.id=? AND compa.id = ?;";
 	private static final String ADD = "INSERT INTO computer (name, introduced, discontinued) VALUES(?, ?, ?);";
 	private static final String ADD_COMPANY = "UPDATE computer SET company_id= ? WHERE id=?";
 	private static final String UPDATE_ONE_COLUMN = "UPDATE computer SET [*column*] = ? WHERE id=?;";
+	private static final String UPDATE = "UPDATE computer SET name = ?, introduced = ?, discontinued = ? WHERE id = ?";
 	private static final String DELETE_ONE = "DELETE FROM computer WHERE id=?;";
+	private static final String SEARCH = "SELECT compu.id, compu.name, compu.introduced, compu.discontinued, compu.company_id, compa.name as company_name FROM computer compu LEFT JOIN company compa ON compu.id = compa.id  WHERE computer.name LIKE ? ";
+	
 	
 	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
 	
@@ -53,13 +54,14 @@ public class ComputerDao {
 			DB_URL = props.getProperty("DB_URL");
 			DB_USERNAME = props.getProperty("DB_USERNAME");
 			DB_PASSWORD = props.getProperty("DB_PASSWORD");
+			DB_DRIVER = props.getProperty("DB_DRIVER");
 			
 		}catch(IOException e) {
 			System.out.println(e);
 		}
 		
 		try {
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			Class.forName(DB_DRIVER).newInstance();
 		}catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
@@ -67,8 +69,6 @@ public class ComputerDao {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		
-
 	}
 	
 	public static ComputerDao getInstance() {
@@ -114,8 +114,11 @@ public class ComputerDao {
 			PreparedStatement getAllComputersStmt;
 			
 			if(offset != 0 && range != 0) {
-				getAllComputersStmt = con.prepareStatement(GET_ALL + "LIMIT ?,?");
-				getAllComputersStmt.setInt(1,offset);
+				getAllComputersStmt = con.prepareStatement(GET_ALL + "LIMIT ?, ?");
+				
+				int page = (offset == 1) ? offset : offset*range;
+				
+				getAllComputersStmt.setInt(1,page);
 				getAllComputersStmt.setInt(2,range);
 			}else {
 				getAllComputersStmt = con.prepareStatement(GET_ALL);
@@ -171,7 +174,13 @@ public class ComputerDao {
 		
 		try (Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)){
 			PreparedStatement addCompanyPStmt = con.prepareStatement(ADD_COMPANY, Statement.RETURN_GENERATED_KEYS);
-			addCompanyPStmt.setLong(1, companyId);
+			if(companyId == 0) {
+				addCompanyPStmt.setNull(1, java.sql.Types.INTEGER);
+			}else {
+				addCompanyPStmt.setLong(1, companyId);
+			}
+			
+
 			addCompanyPStmt.setLong(2, computerId);
 			addCompanyPStmt.executeUpdate();
 			
@@ -201,7 +210,7 @@ public class ComputerDao {
 		try (Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)){
 			ComputerBuilder computerBuilder = new ComputerBuilder();
 			
-			PreparedStatement getComputerPStmt = con.prepareStatement(GET_ONE);
+			PreparedStatement getComputerPStmt = con.prepareStatement(GET);
 			getComputerPStmt.setInt(1, id);
 			ResultSet getComputerRs = getComputerPStmt.executeQuery();
 			if(getComputerRs.next()) {
@@ -215,7 +224,7 @@ public class ComputerDao {
 					computerBuilder.setIntroducedDate(introducedDate);
 				}
 				// Checking if discontinued date is not null
-				String discontinuedString = getComputerRs.getString("introduced");
+				String discontinuedString = getComputerRs.getString("discontinued");
 				if (discontinuedString != null) {
 					LocalDate discontinuedDate = LocalDate.parse(discontinuedString, formatter);
 					computerBuilder.setDiscontinuedDate(discontinuedDate);
@@ -238,7 +247,6 @@ public class ComputerDao {
 					}
 				}
 			}
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} 
@@ -319,20 +327,163 @@ public class ComputerDao {
 				
 		return id;
 	}
+	
+	/**
+	 * Updates one computer from 
+	 * 
+	 * @param id long, id of the computer to update
+	 * @param column String, column name to update
+	 * @param value String, value to update the column with
+	 * @return id long, the Id of the updated row
+	 */
+	public long update(Computer computer) {
+		int id = 0;
+		
+		try (Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)){
+			
+			//As we cant supply identifyers as PreparedStatemnt bind parameters we use a str replace to set the right column name
+			// In order to get the last inserted ID we have to specify it here
+			PreparedStatement pStmt = con.prepareStatement(UPDATE ,Statement.RETURN_GENERATED_KEYS);
+			
+			// Id of the computer to update
+			pStmt.setString(1, computer.getName());
+			
+			if(computer.getIntroduced() == null) {
+				pStmt.setNull(2, java.sql.Types.DATE);
+			}else {
+				pStmt.setString(2, computer.getIntroduced().toString());
+			}
+
+			if(computer.getDiscontinued() == null) {
+				pStmt.setNull(3, java.sql.Types.DATE);
+			}else {
+				pStmt.setString(3, computer.getDiscontinued().toString());
+			}
+
+			if(computer.getId() != 0 ) {
+				
+				pStmt.setLong(4, computer.getId());
+				
+				pStmt.executeUpdate();
+
+				ResultSet rs = pStmt.getGeneratedKeys();
+				if(rs.next()) {
+					id = rs.getInt(1);
+				}
+			}
+
+		}catch(SQLException e ) {
+			e.printStackTrace();
+		}		
+				
+		return id;
+		
+	}
+	
+	
 
 	/**
 	 * Deletes one computer from the computer table given an ID
 	 * 
 	 * @param id Id of the computer to delete
 	 */
-	public void deleteComputer(int id) {
+	public void deleteComputer(Computer computer) {
 		try (Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)){
 			PreparedStatement pStmt = con.prepareStatement(DELETE_ONE);
-			pStmt.setInt(1, id);
+			pStmt.setLong(1, computer.getId());
 			pStmt.executeUpdate();
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} 
 	}
+	
+	public List<Computer> search(int offset, int range, String search ) {
+		List<Computer> matchingComputers = new ArrayList<Computer>();
+		
+		
+		
+		
+		try (Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)){
+			PreparedStatement pStmt = con.prepareStatement(SEARCH + "LIMIT ?, ?");
+			
+			pStmt.setString(1, search );
+
+			int page = (offset == 1) ? offset : offset*range;
+			pStmt.setInt(2,page);
+			pStmt.setInt(3,range);
+			pStmt.executeQuery();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		
+		try (Connection con = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)){
+			ComputerBuilder computerBuilder = new ComputerBuilder();
+			PreparedStatement getAllComputersStmt;
+			
+			if(offset != 0 && range != 0) {
+				getAllComputersStmt = con.prepareStatement(SEARCH + "LIMIT ?, ?");
+				
+				getAllComputersStmt.setString(1, search );
+				
+				int page = (offset == 1) ? offset : offset*range;
+				
+				getAllComputersStmt.setInt(2,page);
+				getAllComputersStmt.setInt(3,range);
+			}else {
+				getAllComputersStmt = con.prepareStatement(SEARCH);
+				getAllComputersStmt.setString(1, search);
+			}
+			
+
+			ResultSet getAllComputersRs	= getAllComputersStmt.executeQuery();
+
+			
+			while(getAllComputersRs.next()) {
+								
+				String introducedString  = getAllComputersRs.getString("introduced");
+				String discontinuedString = getAllComputersRs.getString("discontinued");
+
+				computerBuilder.setId(getAllComputersRs.getLong("id"));
+				computerBuilder.setName(getAllComputersRs.getString("name"));
+
+				// Checking if introduced date is not null
+				if (introducedString != null) {
+					LocalDate introducedDate = LocalDate.parse(introducedString, formatter);
+					computerBuilder.setIntroducedDate(introducedDate);
+				}
+								
+				// Checking if discontinued date is not null
+				if(discontinuedString != null) {
+					LocalDate discontinuedDate = LocalDate.parse(discontinuedString, formatter );
+					computerBuilder.setDiscontinuedDate(discontinuedDate);
+				}
+				
+				
+				Computer computer = computerBuilder.build();
+				
+				int companyId = getAllComputersRs.getInt("company_id");
+
+				if (companyId != 0) {
+						String companyName = getAllComputersRs.getString("company_name");
+						Company company = new Company(companyId, companyName);
+						computer.setCompany(company);
+
+				}
+				matchingComputers.add(computer);
+			}
+				
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}  
+		return matchingComputers;
+		
+		
+		
+		
+	}
+	
+	
+	
 }

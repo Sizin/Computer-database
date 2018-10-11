@@ -44,7 +44,7 @@
 								<label for="companyId">Company</label>
 								<input type="hidden" name="nbCompany" value="${nbCompany}" />
 								<select	class="form-control" name="companyId" id="companyId">
-								<option selected="selected" disabled> - </option>
+								<option selected="selected" value="0"> - No Company - </option>
 							 	<c:forEach items="${companies}" var="company">
 									<option value="${company.id}">${company.name}</option>
 								</c:forEach>									
