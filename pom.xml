@@ -28,8 +28,7 @@
 		<!-- HIKARICP -->
 		<hikaricp.version>3.2.0</hikaricp.version>
 	</properties>
-
-
+	
 	<build>
 		<plugins>
 			<plugin>

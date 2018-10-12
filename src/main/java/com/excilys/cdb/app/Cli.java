@@ -56,29 +56,35 @@ public class Cli {
 
 			n = sc.nextLine();
 
+			System.out.println(Menu.values());
+			
 			Menu choice = Menu.values()[Integer.valueOf(n)];
-
+			System.out.println(choice);
+			
 			switch (choice) {
-			case DISPLAY_COMPUTERS:
+			case EXIT:
 				goOn = false;
 				break;
-			case DISPLAY_COMPANIES:
+			case DISPLAY_COMPUTERS:
 				showComputers();
 				break;
-			case COMPUTER_DETAIL:
+			case DISPLAY_COMPANIES:
 				showCompanies();
 				break;
-			case ADD_COMPUTER:
+			case COMPUTER_DETAIL:
 				showComputer();
 				break;
-			case UPDATE_COMPUTER:
+			case ADD_COMPUTER:
 				createComputer();
 				break;
-			case DELETE_COMPUTER:
+			case UPDATE_COMPUTER:
 				updateComputer();
 				break;
-			case EXIT:
+			case DELETE_COMPUTER:
 				deleteComputer();
+				break;
+			case DELETE_COMPANY:
+				deleteCompany();
 				break;
 			default:
 				throw new InputException();
@@ -155,6 +161,16 @@ public class Cli {
 //			e.printStackTrace();
 //		}
 	}
+	
+	public void deleteCompany() {
+		System.out.println("-> Enter a company ID to delete");
+//		int id = Integer.parseInt(scanner.nextLine());
+		long id = Long.parseLong(scanner.nextLine());
+		Company company = new Company();
+		company.setId(id);
+		companyService.deleteCompany(company);
+
+	}
 
 	public void updateComputer() {
 		String columnName;
@@ -213,13 +229,12 @@ public class Cli {
 					default:
 						System.out.println("You didn't chose an available option");
 				}
-				
 
-				
-				
 			} while (goOn);
 		} while (goOn);
 		
 	}
 
+	
+	
 }

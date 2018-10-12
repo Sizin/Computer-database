@@ -52,5 +52,8 @@ public class CompanyService{
 		return companyDao.get(company);
 	}
 	
+	public void deleteCompany(Company company) {
+		companyDao.deleteCompany(company);
+	}
 		
 }
