@@ -113,25 +113,20 @@ public class CompanyDao {
 			con.setAutoCommit(true);
 			
 		}catch(SQLException e) {
+			logger.error("Deleteing company failed", e);
 			try {
 				con.rollback();
 			}catch(SQLException e1){
-				logger.error("Connection closing failed");
+				logger.error("Rollback failed after failing to delete company", e1);
 			}
 		}finally {
 			try {
 				con.close();
 			}catch(SQLException e) {
-				logger.error("Connection closing failed");
+				logger.error("Connection closing failed when deleting company");
 			}
 		}
-		
-		
-		
-		
-		
-		
-		
+
 	}
 	
 	

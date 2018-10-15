@@ -22,6 +22,10 @@ public class Company {
 	public Company() {
 	}
 	
+	public Company(long id) {
+		this.id = id;
+	}
+	
 	public Company(long id, String name) {
 		this.id 	= id;
 		this.name 	= name;

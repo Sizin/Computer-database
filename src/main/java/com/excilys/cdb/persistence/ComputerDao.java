@@ -1,11 +1,7 @@
 package com.excilys.cdb.persistence;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,7 +10,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,21 +17,20 @@ import org.slf4j.LoggerFactory;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.ComputerBuilder;
-import com.zaxxer.hikari.HikariConfig;
-
 
 public class ComputerDao {
 	
 	private static ComputerDao computerDao = null;
-
-	private final Logger logger = LoggerFactory.getLogger("CompanyDao");
 	
-	private final ConnectionManager connection = ConnectionManager.CONNECTION;
+	private final static Logger logger = LoggerFactory.getLogger("CompanyDao");
+	
+	private ConnectionManager connection;
 	
 	private static final String GET = "SELECT id, name, introduced, discontinued, company_id FROM computer WHERE id=?";
 	private static final String GET_ALL = "SELECT compu.id, compu.name, compu.introduced, compu.discontinued, compu.company_id, compa.name as company_name FROM computer compu LEFT JOIN company compa ON compu.id = compa.id ";
 	private static final String GET_COMPUTER_AND_COMPANY = "SELECT compu.id, compa.name as company_name FROM computer compu LEFT JOIN company compa ON compu.company_id WHERE compu.id=? AND compa.id = ?;";
-	private static final String GET_COUNT = "SELECT COUNT(id) as count FROM computer";
+//	private static final String GET_COUNT = "SELECT COUNT(id) as count FROM computer";
+	private static final String GET_COUNT = "SELECT count(id) FROM Computer";
 	private static final String GET_COUNT_SEARCH = "SELECT COUNT(id) as count FROM computer WHERE name LIKE ?";
 	private static final String ADD = "INSERT INTO computer (name, introduced, discontinued) VALUES(?, ?, ?);";
 	private static final String ADD_COMPANY = "UPDATE computer SET company_id= ? WHERE id=?";
@@ -49,9 +43,26 @@ public class ComputerDao {
 	
 	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
 	
+	private ComputerDao(int test) {
+		
+		if(test == 0) {
+			this.connection = ConnectionManager.CONNECTION;
+		}else if (test == 1) {
+			this.connection = ConnectionManager.CONNECTION_TEST_DB;
+		}
+
+	}
+	
 	public static ComputerDao getInstance() {
 		if(computerDao == null) {
-			computerDao = new ComputerDao();
+			computerDao = new ComputerDao(0);
+		}
+		return computerDao;
+	}
+	
+	public static ComputerDao getTestInstance() {
+		if(computerDao == null) {
+			computerDao = new ComputerDao(1);
 		}
 		return computerDao;
 	}
@@ -400,11 +411,16 @@ public class ComputerDao {
 		} 
 	}
 	
-	public void deleteComputerUsingCompany(Long id, Connection con) throws SQLException {
+	public static void deleteComputerUsingCompany(Long id, Connection con){
+		try {
+			PreparedStatement deleteUsingCompanyPStmt = con.prepareStatement(DELETE_USING_COMPANY );
+			deleteUsingCompanyPStmt.setLong(1, id);
+			deleteUsingCompanyPStmt.executeUpdate();
+		}catch(SQLException e) {
+			logger.error("Error deleting computer during delete company transaction", e);
+		}
+
 		
-		PreparedStatement deleteUsingCompanyPStmt = con.prepareStatement(DELETE_USING_COMPANY );
-		deleteUsingCompanyPStmt.setLong(1, id);
-		deleteUsingCompanyPStmt.executeUpdate();
 	}
 	
 	

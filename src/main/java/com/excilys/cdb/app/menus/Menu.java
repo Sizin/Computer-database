@@ -1,14 +1,14 @@
 package com.excilys.cdb.app.menus;
 
 public enum Menu {
+	EXIT(0, "Exit"),
 	DISPLAY_COMPUTERS(1, "List computers"),
 	DISPLAY_COMPANIES(2, "List companies"),
 	COMPUTER_DETAIL(3, "Show computer details"),
 	ADD_COMPUTER(4, "Create a computer"),
 	UPDATE_COMPUTER(5, "Update a computer"),
 	DELETE_COMPUTER(6, "Delete a computer"),
-	DELETE_COMPANY(7, "Delete a company"),
-	EXIT(0, "Exit");
+	DELETE_COMPANY(7, "Delete a company");
 	
 	private int optionId;
 	private String optionTitle;

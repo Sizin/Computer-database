@@ -14,17 +14,17 @@ public class TestRunner {
 	private static Logger logger = Logger.getLogger(TestRunner.class);
 	
 	
-	
-	public static void main(String[] args) {
-		BasicConfigurator.configure();
-		
-		Result result = JUnitCore.runClasses(ComputerCRUDTest.class);
-		
-	      for (Failure failure : result.getFailures()) {
-	          failure.toString();
-	       }
-	      System.out.println("No failures");
-
-	}
+//	
+//	public static void main(String[] args) {
+//		BasicConfigurator.configure();
+//		
+//		Result result = JUnitCore.runClasses(ComputerCRUDTest.class);
+//		
+//	      for (Failure failure : result.getFailures()) {
+//	          failure.toString();
+//	       }
+//	      System.out.println("No failures");
+//
+//	}
 	
 }

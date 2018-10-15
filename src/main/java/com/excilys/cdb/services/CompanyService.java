@@ -52,7 +52,7 @@ public class CompanyService{
 		return companyDao.get(company);
 	}
 	
-	public void deleteCompany(Company company) {
+	public static void deleteCompany(Company company) {
 		companyDao.deleteCompany(company);
 	}
 		

@@ -5,15 +5,24 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.cdb.app.menus.Menu;
 import com.excilys.cdb.app.menus.UpdateComputerMenu;
+import com.excilys.cdb.dto.CompanyDto;
+import com.excilys.cdb.dto.ComputerDto;
 import com.excilys.cdb.exceptions.ComputerNameException;
 import com.excilys.cdb.exceptions.DateFormatException;
 import com.excilys.cdb.exceptions.DateRangeException;
 import com.excilys.cdb.exceptions.InputException;
+import com.excilys.cdb.mapper.CompanyMapper;
+import com.excilys.cdb.mapper.ComputerMapper;
 import com.excilys.cdb.model.*;
 
 import com.excilys.cdb.services.*;
+import com.excilys.cdb.validators.ComputerValidator;
+import com.excilys.cdb.validators.DateValidator;
 
 /**
  * @author Sizin
@@ -24,9 +33,15 @@ public class Cli {
 	public Scanner scanner;
 
 	private ComputerService computerService;
-	private  CompanyService companyService;
+	private CompanyService companyService;
+	
+	private ComputerMapper computerMapper = ComputerMapper.getInstance();
+	private CompanyMapper companyMapper = CompanyMapper.getInstance();
 
-	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	
+	private final Logger logger = LoggerFactory.getLogger("Cli");
+	
 	
 	public Cli() {
 
@@ -55,11 +70,8 @@ public class Cli {
 			String n = "0";
 
 			n = sc.nextLine();
-
-			System.out.println(Menu.values());
 			
 			Menu choice = Menu.values()[Integer.valueOf(n)];
-			System.out.println(choice);
 			
 			switch (choice) {
 			case EXIT:
@@ -121,6 +133,27 @@ public class Cli {
 		System.out.println("-> Enter a computer ID to delete");
 		int id = Integer.parseInt(scanner.nextLine());
 	}
+	
+	public void deleteCompany() {
+		System.out.println("-> Enter a company ID to delete");		
+		
+		String idString  = scanner.nextLine();
+		
+		CompanyDto companyDto = new CompanyDto();
+		companyDto.setId(idString);
+
+		Company company = companyMapper.toCompany(companyDto);
+		
+		
+//		long id = Long.parseLong(scanner.nextLine());
+		
+//		Company company = new Company(id);
+		companyService.deleteCompany(company);
+		
+
+	}
+
+	
 
 	public void createComputer() {
 		String introduced;
@@ -155,23 +188,32 @@ public class Cli {
 			
 		} while (typeDiscontinued);
 
-//		try {
-//			computerService.insertComputer(name, introduced, discontinued);
-//		} catch (DateFormatException | DateRangeException | ComputerNameException e) {
-//			e.printStackTrace();
-//		}
+		try {
+			ComputerDto computerDto = new ComputerDto();
+			ComputerValidator.validateName(name);
+			computerDto.setName(name);			
+			
+			if(DateValidator.validDate(introduced)) {
+				computerDto.setIntroduced(introduced);
+				if(DateValidator.validDate(discontinued)) {
+					if(ComputerValidator.validateDates(introduced, discontinued)) {
+						computerDto.setDiscontinued(discontinued);
+					}
+				}
+			}
+
+			Computer computer = computerMapper.toComputer(computerDto);
+			long newComputerId = computerService.insertComputer(computer);	
+		}catch(ComputerNameException cpne) {
+			logger.error("Computer name contains invalid characters '[~#@*+%{}<>\\\\[\\\\]|\\\"\\\\_^]'", cpne);
+		}catch(DateFormatException dfe) {
+			logger.error("Date formats should be YYYY-MM-DD", dfe);
+		}catch(DateRangeException dre) {
+			logger.error(" Discontinued Data >= Introduced Date (null if Introduced date is null)", dre);
+		}
+
 	}
 	
-	public void deleteCompany() {
-		System.out.println("-> Enter a company ID to delete");
-//		int id = Integer.parseInt(scanner.nextLine());
-		long id = Long.parseLong(scanner.nextLine());
-		Company company = new Company();
-		company.setId(id);
-		companyService.deleteCompany(company);
-
-	}
-
 	public void updateComputer() {
 		String columnName;
 		String value;

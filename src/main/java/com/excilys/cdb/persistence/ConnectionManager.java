@@ -14,17 +14,25 @@ import com.zaxxer.hikari.HikariDataSource;
 
 
 public enum ConnectionManager{
-	
-	CONNECTION;
+	CONNECTION(0),
+	CONNECTION_TEST_DB(1);
 	
 	private HikariConfig config = new HikariConfig();
 	private DataSource datasource;
 	
-	ConnectionManager(){
+	ConnectionManager(int test){
 		
 		Properties props = new Properties();
+		InputStream inputStream = null;
+		
+		
+		if(test == 0) {
+			inputStream = getClass().getResourceAsStream("/hikari.properties");
+		}else if (test == 1){
+			inputStream = getClass().getResourceAsStream("/hikaritest.properties");
+		}
+		
 
-		InputStream inputStream = getClass().getResourceAsStream("/hikari.properties");
 		try {
 			props.load(inputStream);
 		} catch (IOException e) {
@@ -34,10 +42,14 @@ public enum ConnectionManager{
 		props.getProperty("jdbcUrl");
 		props.getProperty("dataSource.user");
 		props.getProperty("dataSource.password");
-		props.getProperty("dataSource.serverName");
-		props.getProperty("dataSource.portNumber");
-		props.getProperty("dataSource.databaseName");
 		
+		if(test == 0) {
+			props.getProperty("dataSource.serverName");
+			props.getProperty("dataSource.portNumber");
+			props.getProperty("dataSource.databaseName");
+		}
+		
+
 		config = new HikariConfig(props);
 		datasource = new HikariDataSource(config);
 	}
