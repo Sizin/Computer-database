@@ -5,8 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 import com.excilys.cdb.app.menus.Menu;
 import com.excilys.cdb.app.menus.UpdateComputerMenu;
@@ -40,7 +39,7 @@ public class Cli {
 
 	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	
-	private final Logger logger = LoggerFactory.getLogger("Cli");
+	private final Logger logger = Logger.getLogger("Cli");
 	
 	
 	public Cli() {

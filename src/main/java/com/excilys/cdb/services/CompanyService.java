@@ -1,9 +1,6 @@
 package com.excilys.cdb.services;
 
 import java.util.List;
-import java.util.Optional;
-
-import javax.swing.plaf.synth.SynthSpinnerUI;
 
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.persistence.CompanyDao;

@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.excilys.cdb.dto.CompanyDto;
-import com.excilys.cdb.dto.ComputerDto;
+
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.CompanyBuilder;
-import com.excilys.cdb.model.ComputerBuilder;
 
 public class CompanyMapper {
 

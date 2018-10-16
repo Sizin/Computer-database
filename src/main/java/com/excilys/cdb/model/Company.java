@@ -1,8 +1,5 @@
 package com.excilys.cdb.model;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.persistence.*;
 
 /**

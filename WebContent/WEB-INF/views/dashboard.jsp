@@ -74,7 +74,7 @@
 						<tr>
 							<td class="editMode"><input type="checkbox" name="cb"
 								class="cb" value="${computer.id}"></td>
-							<td><a href="/editComputer?computerId=${computer.id}">${computer.name}</a></td>
+							<td><a href="/CdbSinan/editComputer?computerId=${computer.id}">${computer.name}</a></td>
 							<td>${computer.introduced}</td>
 							<td>${computer.discontinued}</td>
 							<td><c:out value="${computer.company.name}" /></td>

@@ -2,7 +2,6 @@ package com.excilys.cdb.servlets;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -13,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.spi.LoggerFactory;
 
 import com.excilys.cdb.services.ComputerService;
 import com.excilys.cdb.validators.CompanyValidator;
@@ -35,26 +33,13 @@ import com.excilys.cdb.model.Computer;
 @WebServlet("/editComputer")
 public class EditComputer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private final Logger logger;
+	private final Logger logger = Logger.getLogger(EditComputer.class);
 
-	private static CompanyService companyService;
-	private static ComputerService computerService;
+	private static CompanyService companyService = CompanyService.getInstance();
+	private static ComputerService computerService = ComputerService.getInstance();
 
-	private static CompanyMapper companyMapper;
-	private static ComputerMapper computerMapper;
-
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
-	public EditComputer() {
-		super();
-		companyService = CompanyService.getInstance();
-		computerService = ComputerService.getInstance();
-		companyMapper = CompanyMapper.getInstance();
-		computerMapper = ComputerMapper.getInstance();
-
-		logger = Logger.getLogger(EditComputer.class);
-	}
+	private static CompanyMapper companyMapper = CompanyMapper.getInstance();
+	private static ComputerMapper computerMapper = ComputerMapper.getInstance();
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse

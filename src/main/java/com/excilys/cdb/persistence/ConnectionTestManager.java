@@ -1,6 +1,5 @@
 package com.excilys.cdb.persistence;
 
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -12,19 +11,19 @@ import javax.sql.DataSource;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-public enum ConnectionManager{
+public enum ConnectionTestManager{
 	CONNECTION;
 
 	
 	private HikariConfig config = new HikariConfig();
 	private DataSource datasource;
 	
-	ConnectionManager(){
+	ConnectionTestManager(){
 		
 		Properties props = new Properties();
 		InputStream inputStream = null;
 		
-		inputStream = getClass().getResourceAsStream("/hikari.properties");
+		inputStream = getClass().getResourceAsStream("/hikaritest.properties");
 		
 		try {
 			props.load(inputStream);

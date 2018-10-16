@@ -1,7 +1,6 @@
 package com.excilys.cdb.model;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 import javax.persistence.*;
 
@@ -78,6 +77,10 @@ public final class Computer {
 	
 	public String getCompanyName() {
 		return this.company.getName();
+	}
+	
+	public long getCompanyId() {
+		return this.company.getId();
 	}
 	
 	@Override

@@ -1,14 +1,10 @@
 package com.excilys.cdb.validators;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
-import java.time.temporal.ChronoField;
-import java.util.Locale;
-import java.util.Optional;
 
 import com.excilys.cdb.exceptions.DateFormatException;
 import com.excilys.cdb.exceptions.DateRangeException;

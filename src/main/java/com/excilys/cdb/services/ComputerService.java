@@ -5,9 +5,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.excilys.cdb.app.menus.UpdateComputerMenu;
-import com.excilys.cdb.exceptions.ComputerNameException;
 import com.excilys.cdb.exceptions.DateFormatException;
-import com.excilys.cdb.exceptions.DateRangeException;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.persistence.ComputerDao;
@@ -29,7 +27,8 @@ public class ComputerService {
 	 * ComputerService default constructor
 	 */
 	private ComputerService() {
-		this.computerDao = ComputerDao.getInstance();
+		boolean runOnTestDb = false;
+		this.computerDao = ComputerDao.getInstance(runOnTestDb);
 	}
 
 	/**
