@@ -10,7 +10,8 @@ import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.CompanyBuilder;
@@ -20,7 +21,7 @@ public class CompanyDao {
 	
 	private final ConnectionManager connection = ConnectionManager.CONNECTION;
 	
-	private final Logger logger = Logger.getLogger("CompanyDao");
+	private final Logger logger = LoggerFactory.getLogger("CompanyDao");
 	
 	private static CompanyDao companyDao = null;
 	private static ComputerDao computerDao = null;

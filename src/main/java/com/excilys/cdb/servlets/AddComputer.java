@@ -13,7 +13,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.excilys.cdb.dto.CompanyDto;
 import com.excilys.cdb.dto.ComputerDto;
@@ -37,7 +38,7 @@ import com.excilys.cdb.validators.DateValidator;
 public class AddComputer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	final static Logger logger = Logger.getLogger(Dashboard.class);
+	final static Logger logger = LoggerFactory.getLogger(Dashboard.class);
 
 
 	private static CompanyService companyService;

@@ -8,8 +8,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.persistence.Query;
-
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.Test;
 
 import com.excilys.cdb.model.Computer;
@@ -18,7 +18,7 @@ import com.excilys.cdb.model.Computer;
 
 public class ComputerCRUDTest extends JPAHibernateTest{
 
-	private static Logger logger = Logger.getLogger(ComputerCRUDTest.class);
+	private static Logger logger = LoggerFactory.getLogger(ComputerCRUDTest.class);
 	private static ComputerDao computerDao = ComputerDao.getInstance(true);
 	
 	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

@@ -2,7 +2,8 @@ package com.excilys.cdb.services;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.excilys.cdb.app.menus.UpdateComputerMenu;
 import com.excilys.cdb.exceptions.DateFormatException;
@@ -21,7 +22,7 @@ public class ComputerService {
 	private static ComputerService computerService = null;
 	private static ComputerDao computerDao = null;
 
-	private static Logger logger = Logger.getLogger(ComputerService.class);
+	private static Logger logger = LoggerFactory.getLogger(ComputerService.class);
 	
 	/**
 	 * ComputerService default constructor

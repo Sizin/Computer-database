@@ -11,7 +11,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
@@ -21,7 +22,7 @@ public class ComputerDao {
 	
 	private static ComputerDao computerDao = null;
 	
-	private final static Logger logger = Logger.getLogger("CompanyDao");
+	private final static Logger logger = LoggerFactory.getLogger("CompanyDao");
 	
 	private ConnectionManager connection;
 	private ConnectionTestManager connectionTest;

@@ -11,7 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.excilys.cdb.services.ComputerService;
 import com.excilys.cdb.validators.CompanyValidator;
@@ -33,7 +34,7 @@ import com.excilys.cdb.model.Computer;
 @WebServlet("/editComputer")
 public class EditComputer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private final Logger logger = Logger.getLogger(EditComputer.class);
+	private final Logger logger = LoggerFactory.getLogger(EditComputer.class);
 
 	private static CompanyService companyService = CompanyService.getInstance();
 	private static ComputerService computerService = ComputerService.getInstance();

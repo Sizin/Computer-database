@@ -9,6 +9,10 @@
 
 
 	<properties>
+		<!-- LOGBACK -->
+		<logback.version>1.2.3</logback.version>
+		<!-- SLF4J -->
+		<slf4j.version>1.8.0-beta2</slf4j.version>
 		<!-- JAVAX SERVLET -->
 		<javax.servlet.version>3.0.1</javax.servlet.version>
 		<!-- TOMCAT -->
@@ -21,8 +25,6 @@
 		<jstl.version>1.2</jstl.version>
 		<!-- H2 DATABASE -->
 		<h2.version>1.4.196</h2.version>
-		<!-- LOG4J -->
-		<log4j.version>1.2.17</log4j.version>
 		<!-- JUNIT VERSION -->
 		<junit.version>4.12</junit.version>
 		<!-- HIKARICP -->
@@ -52,6 +54,19 @@
 	</build>
 
 	<dependencies>
+		<!-- LOGBACK -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
+		</dependency>
+
+		<!-- SLF4J -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-jdk14</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
 
 		<!-- JAVAX SERVLET -->
 		<dependency>
@@ -88,13 +103,6 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
 			<version>${hibernate.version}</version>
-		</dependency>
-
-		<!-- LOG4J -->
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>${log4j.version}</version>
 		</dependency>
 
 		<!-- SPRING WEB MVC -->

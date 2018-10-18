@@ -1,7 +1,7 @@
 package com.excilys.cdb.app;
 
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
@@ -11,7 +11,7 @@ import com.excilys.cdb.services.ComputerService;
 
 public class TestRunner {
 
-	private static Logger logger = Logger.getLogger(TestRunner.class);
+	private static Logger logger = LoggerFactory.getLogger(TestRunner.class);
 	
 	
 //	
