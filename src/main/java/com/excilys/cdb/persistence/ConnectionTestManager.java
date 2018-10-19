@@ -8,18 +8,16 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
+
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-public enum ConnectionTestManager{
-	CONNECTION;
-
+public class ConnectionTestManager{
 	
 	private HikariConfig config = new HikariConfig();
 	private DataSource datasource;
 	
-	ConnectionTestManager(){
-		
+	public ConnectionTestManager() {
 		Properties props = new Properties();
 		InputStream inputStream = null;
 		
@@ -39,7 +37,8 @@ public enum ConnectionTestManager{
 		datasource = new HikariDataSource(config);
 	}
 	
-	public Connection getConnection() throws SQLException{
+	public Connection getConnection() throws SQLException {
 		return datasource.getConnection();
 	}
+	
 }

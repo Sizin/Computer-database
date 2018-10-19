@@ -1,12 +1,15 @@
 package com.excilys.cdb.model;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.excilys.cdb.services.ComputerService;
 
+@Component
 public class ComputerPagination {
-
-	private ComputerService computerService;
 	
-	private static ComputerPagination pagination;
+	@Autowired
+	private ComputerService computerService;
 	
 	protected int numberOfComputer;
 	protected int resultPerPage;
@@ -18,29 +21,19 @@ public class ComputerPagination {
 	protected String arrowDisplay;
 	
 	protected String searchedWord;
-	
-	private ComputerPagination() {
-		computerService = ComputerService.getInstance();
-		numberOfComputer = computerService.getComputerCount();
+
+	public ComputerPagination() {
 		resultPerPage = 10;
-		nbPage = numberOfComputer/resultPerPage;
 		currentPage = 1;
 		currentStartPage = 1;
 		currentEndPage = 5;
-		arrowDisplay="rightOnly";
+		arrowDisplay = "rightOnly";
 	}
 	
-	public static ComputerPagination getInstance() {
-		if(pagination == null) {
-			pagination = new ComputerPagination();
-		}
-		return pagination;
-	}
 	
 	public void setPages() {
 
 		if(searchedWord != null && searchedWord != "") {
-			numberOfComputer = computerService.getComputerCount(searchedWord);
 			nbPage = numberOfComputer/resultPerPage;
 		}
 		
@@ -73,9 +66,7 @@ public class ComputerPagination {
 			arrowDisplay = "none";
 			
 		}
-
 	}
-	
 	
 	public ComputerService getComputerService() {
 		return computerService;
@@ -83,14 +74,6 @@ public class ComputerPagination {
 
 	public void setComputerService(ComputerService computerService) {
 		this.computerService = computerService;
-	}
-
-	public static ComputerPagination getPagination() {
-		return pagination;
-	}
-
-	public static void setPagination(ComputerPagination pagination) {
-		ComputerPagination.pagination = pagination;
 	}
 
 	public int getNumberOfComputer() {

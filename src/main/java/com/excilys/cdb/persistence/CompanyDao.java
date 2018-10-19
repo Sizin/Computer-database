@@ -12,35 +12,28 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.CompanyBuilder;
 
-
+@Repository
 public class CompanyDao {
+
+	@Autowired
+	private ConnectionManager connection;
 	
-	private final ConnectionManager connection = ConnectionManager.CONNECTION;
+	@Autowired
+	private ComputerDao computerDao;
 	
 	private final Logger logger = LoggerFactory.getLogger("CompanyDao");
-	
-	private static CompanyDao companyDao = null;
-	private static ComputerDao computerDao = null;
-	
-	private Connection con;
+
 	
 	private static final String GET_ALL = "SELECT id, name FROM company;";
 	private static final String GET_ONE = "SELECT id, name FROM company WHERE id=?;";
 	private static final String GET_COUNT = "SELECT COUNT(id) as count FROM company";
 	private static final String DELETE = "DELETE FROM company WHERE id = ?";
-	
-	
-	
-	public static CompanyDao getInstance() {
-		if(companyDao == null) {
-			companyDao = new CompanyDao();
-		}
-		return companyDao;
-	}
 	
 	public int getCompanyCount() {
 		int rows = 0;

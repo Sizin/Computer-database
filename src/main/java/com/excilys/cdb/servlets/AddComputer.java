@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,6 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.excilys.cdb.dto.CompanyDto;
 import com.excilys.cdb.dto.ComputerDto;
@@ -40,23 +43,20 @@ public class AddComputer extends HttpServlet {
 
 	final static Logger logger = LoggerFactory.getLogger(Dashboard.class);
 
-
-	private static CompanyService companyService;
-	private static ComputerService computerService;
-
-	private static CompanyMapper companyMapper;
-	private static ComputerMapper computerMapper;
+	@Autowired
+	private CompanyService companyService;
+	@Autowired
+	private ComputerService computerService;
+	@Autowired
+	private CompanyMapper companyMapper;
+	@Autowired
+	private ComputerMapper computerMapper;
 	
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public AddComputer() {
-        super();
-        this.companyService = CompanyService.getInstance();
-        this.computerService = ComputerService.getInstance();
-        this.companyMapper = CompanyMapper.getInstance();
-        this.computerMapper = ComputerMapper.getInstance();
-    }
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
+		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -135,7 +135,6 @@ public class AddComputer extends HttpServlet {
 
 		RequestDispatcher rd = request.getRequestDispatcher("Dashboard");
 		rd.forward(request,response);
-//		doGet(request, response);
 		
 		
 	}

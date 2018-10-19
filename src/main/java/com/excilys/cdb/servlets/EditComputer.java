@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.excilys.cdb.services.ComputerService;
 import com.excilys.cdb.validators.CompanyValidator;
@@ -35,13 +38,22 @@ import com.excilys.cdb.model.Computer;
 public class EditComputer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private final Logger logger = LoggerFactory.getLogger(EditComputer.class);
+	
+	@Autowired
+	private CompanyService companyService;
+	@Autowired
+	private ComputerService computerService;
+	@Autowired
+	private CompanyMapper companyMapper;
+	@Autowired
+	private ComputerMapper computerMapper;
 
-	private static CompanyService companyService = CompanyService.getInstance();
-	private static ComputerService computerService = ComputerService.getInstance();
-
-	private static CompanyMapper companyMapper = CompanyMapper.getInstance();
-	private static ComputerMapper computerMapper = ComputerMapper.getInstance();
-
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
+		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+	}
+	
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)

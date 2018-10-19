@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.excilys.cdb.app.menus.UpdateComputerMenu;
 import com.excilys.cdb.exceptions.DateFormatException;
@@ -17,34 +19,14 @@ import com.excilys.cdb.validators.MysqlStringEscape;
  * @author Sizin Computer Service Singleton class
  *
  */
+@Service
 public class ComputerService {
-
-	private static ComputerService computerService = null;
-	private static ComputerDao computerDao = null;
-
+	
+	@Autowired
+	private ComputerDao computerDao;
+	
 	private static Logger logger = LoggerFactory.getLogger(ComputerService.class);
 	
-	/**
-	 * ComputerService default constructor
-	 */
-	private ComputerService() {
-		boolean runOnTestDb = false;
-		this.computerDao = ComputerDao.getInstance(runOnTestDb);
-	}
-
-	/**
-	 * Instantiate a ComputerService object if it is not instantiated
-	 * 
-	 * 
-	 * @return An instance of CoputerService
-	 */
-	public static ComputerService getInstance() {
-		if (computerService == null) {
-			computerService = new ComputerService();
-		}
-		return computerService;
-	}
-
 	public int getComputerCount() {
 		int count = computerDao.getComputerCount();
 		return count;

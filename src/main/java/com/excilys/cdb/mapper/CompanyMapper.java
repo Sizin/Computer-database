@@ -3,24 +3,27 @@ package com.excilys.cdb.mapper;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.excilys.cdb.dto.CompanyDto;
 
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.CompanyBuilder;
 
+@Component
 public class CompanyMapper {
 
-	private static CompanyMapper companyMapper;
+//	private CompanyMapper companyMapper;
 	
 	private CompanyMapper() {
 	}
 	
-	public static CompanyMapper getInstance() {
-		if(companyMapper == null) {
-			companyMapper = new CompanyMapper();
-		}
-		return companyMapper;
-	}
+//	public static CompanyMapper getInstance() {
+//		if(companyMapper == null) {
+//			companyMapper = new CompanyMapper();
+//		}
+//		return companyMapper;
+//	}
 	
 	public Company toCompany(CompanyDto companyDto) {
 		CompanyBuilder companyBuilder = new CompanyBuilder();

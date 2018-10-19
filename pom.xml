@@ -54,6 +54,7 @@
 	</build>
 
 	<dependencies>
+
 		<!-- LOGBACK -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>

@@ -7,6 +7,8 @@ import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.excilys.cdb.app.menus.Menu;
 import com.excilys.cdb.app.menus.UpdateComputerMenu;
@@ -28,31 +30,24 @@ import com.excilys.cdb.validators.DateValidator;
  * @author Sizin
  *
  */
+@Component
 public class Cli {
 
-	public Scanner scanner;
-
+	public Scanner scanner = new Scanner(System.in);
+	@Autowired
 	private ComputerService computerService;
+	@Autowired
 	private CompanyService companyService;
+	@Autowired
+	private ComputerMapper computerMapper;
+	@Autowired
+	private CompanyMapper companyMapper;
 	
-	private ComputerMapper computerMapper = ComputerMapper.getInstance();
-	private CompanyMapper companyMapper = CompanyMapper.getInstance();
 
 	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	
 	private final Logger logger = LoggerFactory.getLogger("Cli");
 	
-	
-	public Cli() {
-
-		this.scanner = new Scanner(System.in);
-
-		ComputerService computerService = ComputerService.getInstance();
-
-		CompanyService companyService = CompanyService.getInstance();
-
-	}
-
 	/**
 	 * Command line interface displaying options to the user
 	 * 

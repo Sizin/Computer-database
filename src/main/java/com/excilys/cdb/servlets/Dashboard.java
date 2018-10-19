@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,10 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.ComputerPagination;
-import com.excilys.cdb.services.CompanyService;
 import com.excilys.cdb.services.ComputerService;
 
 /**
@@ -27,20 +29,15 @@ public class Dashboard extends HttpServlet {
 
 	final static Logger logger = LoggerFactory.getLogger(Dashboard.class);
 
-	private CompanyService companyService;
+	@Autowired
 	private ComputerService computerService;
-	private ComputerPagination computerPagination;
 
-	/**
-	 * static
-	 * 
-	 * @see HttpServlet#HttpServlet()
-	 */
-	public Dashboard() {
-		super();
-		this.companyService = CompanyService.getInstance();
-		this.computerService = ComputerService.getInstance();
-		this.computerPagination = ComputerPagination.getInstance();
+	public ComputerPagination computerPagination = new ComputerPagination();
+
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
+		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
 	}
 
 	/**
@@ -49,30 +46,34 @@ public class Dashboard extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
+
 		String search = request.getParameter("search");
-
+		computerPagination.setNumberOfComputer(computerService.getComputerCount(search));
 		List<Computer> computers = new ArrayList<Computer>();
-
+		
 		if (request.getParameter("range") != null) {
 			computerPagination.setResultPerPage(Integer.parseInt(request.getParameter("range")));
+		}else {
+			computerPagination.setResultPerPage(10);
 		}
 		if (request.getParameter("page") != null) {
 			computerPagination.setCurrentPage(Integer.parseInt(request.getParameter("page")));
 		}
 
 		if (search != "" && search != null) {
-			logger.info("User search");
 			// Setting the searched word in the Pagination class cause it impacts it directly
 			computerPagination.setSearchedWord(search);
+			computerPagination.setNumberOfComputer(computerService.getComputerCount(search));
 			computerPagination.setPages();
 			computers = computerService.showComputers(computerPagination.getCurrentPage(),	computerPagination.getResultPerPage(), search);
 			
 		}else if(computerPagination.getSearchedWord() != null && computerPagination.getSearchedWord() != "") {
+			computerPagination.setNumberOfComputer(computerService.getComputerCount(search));
 			computerPagination.setPages();
 			computers = computerService.showComputers(computerPagination.getCurrentPage(),	computerPagination.getResultPerPage(), computerPagination.getSearchedWord());
 		}else {
-			computerPagination.setSearchedWord("");
+			computerPagination.setSearchedWord(null);
+			computerPagination.setNumberOfComputer(computerService.getComputerCount());
 			computerPagination.setPages();
 			computers = computerService.showComputers(computerPagination.getCurrentPage(),	computerPagination.getResultPerPage(), computerPagination.getSearchedWord());
 		}

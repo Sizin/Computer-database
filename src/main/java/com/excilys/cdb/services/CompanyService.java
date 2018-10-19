@@ -2,6 +2,9 @@ package com.excilys.cdb.services;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.persistence.CompanyDao;
 
@@ -10,25 +13,11 @@ import com.excilys.cdb.persistence.CompanyDao;
  * Computer Service Singleton class
  *
  */
+@Service
 public class CompanyService{
 
-	private static CompanyService companyService = null;
-	private static CompanyDao companyDao = null;
-	
-	
-	private CompanyService() {
-		this.companyDao 		= CompanyDao.getInstance();
-	}
-	
-	/**
-	 * @return An instance of CoputerService
-	 */
-	public static CompanyService getInstance() {
-		if(companyService == null ) {
-			companyService = new CompanyService();
-		}
-		return companyService;
-	}
+	@Autowired
+	private CompanyDao companyDao;
 
 	public int getComputerCount() {
 		int count = companyDao.getCompanyCount();
@@ -49,7 +38,8 @@ public class CompanyService{
 		return companyDao.get(company);
 	}
 	
-	public static void deleteCompany(Company company) {
+//	public static void deleteCompany(Company company) {
+	public void deleteCompany(Company company) {
 		companyDao.deleteCompany(company);
 	}
 		
