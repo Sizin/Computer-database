@@ -48,6 +48,7 @@ public class Dashboard extends HttpServlet {
 			throws ServletException, IOException {
 
 		String search = request.getParameter("search");
+		computerPagination.setSearchedWord(search);
 		computerPagination.setNumberOfComputer(computerService.getComputerCount(search));
 		List<Computer> computers = new ArrayList<Computer>();
 		

@@ -60,8 +60,7 @@ public class ComputerDao {
 	
 	
 	public int getComputerCount() {
-		int nbComputer = jdbcTemplate.queryForObject(GET_COUNT, Integer.class);
-		return nbComputer;
+		return jdbcTemplate.queryForObject(GET_COUNT, Integer.class);
 	}
 	
 	public int getComputerCount(String search) {

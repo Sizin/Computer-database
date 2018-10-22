@@ -47,6 +47,9 @@ public class EditComputer extends HttpServlet {
 	private CompanyMapper companyMapper;
 	@Autowired
 	private ComputerMapper computerMapper;
+	@Autowired
+	private ComputerValidator computerValidator;
+	
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -102,9 +105,9 @@ public class EditComputer extends HttpServlet {
 			int numberOfComputer = computerService.getComputerCount();
 		
 			try {
-				ComputerValidator.validateId(computerIdString, numberOfComputer);
-				ComputerValidator.validateName(computerName);
-				ComputerValidator.validateDates(computerIntroduced, computerDiscontinued);
+				computerValidator.validateId(computerIdString, numberOfComputer);
+				computerValidator.validateName(computerName);
+				computerValidator.validateDates(computerIntroduced, computerDiscontinued);
 				
 				computerDto.setId(computerIdString);
 				computerDto.setName(computerName);

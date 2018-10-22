@@ -6,14 +6,17 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 
+import org.springframework.stereotype.Component;
+
 import com.excilys.cdb.exceptions.DateFormatException;
 import com.excilys.cdb.exceptions.DateRangeException;
 
+@Component
 public class DateValidator {
 	
-	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	
-	public static boolean checkDates(String date1, String date2) throws DateFormatException, DateRangeException {
+	public boolean checkDates(String date1, String date2) throws DateFormatException, DateRangeException {
 		LocalDate date = null;
 		
 		LocalDate localDate1 = null;
@@ -38,7 +41,7 @@ public class DateValidator {
 				localDate2 = LocalDate.parse(date2);
 				
 				// Checks if discontinued date is greater or equal to introduced date
-				if (localDate1 != null && DateValidator.isGreaterDate(localDate1, localDate2)) {
+				if (localDate1 != null && isGreaterDate(localDate1, localDate2)) {
 					result = true;
 				} else if(localDate1 == null && localDate2 != null) {
 					throw new DateRangeException();
@@ -63,7 +66,7 @@ public class DateValidator {
 	 * @param value The date to check in String format
 	 * @return true or false according to the check
 	 */
-	public static boolean isValidFormat(String value) {
+	public boolean isValidFormat(String value) {
 	    DateTimeFormatter[] formatters = {
 	    		new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd HH:mm:ss.S").toFormatter()
 	    };
@@ -77,7 +80,7 @@ public class DateValidator {
 	    return true;
 	}
 	
-	public static boolean validDate(String dateString) throws DateFormatException, DateRangeException {		
+	public boolean validDate(String dateString) throws DateFormatException, DateRangeException {		
 		if(!isDateStringEmpty(dateString)) {
 			if(isValidFormat(dateString)) {
 				return true;
@@ -89,7 +92,7 @@ public class DateValidator {
 		}
 	}
 	
-	public static boolean isGreaterDate(LocalDate date1, LocalDate date2) throws DateRangeException {	
+	public boolean isGreaterDate(LocalDate date1, LocalDate date2) throws DateRangeException {	
 		if(date1 == null) {
 			throw new DateRangeException();
 		}
@@ -105,7 +108,7 @@ public class DateValidator {
 
 	}
 	
-	public static boolean isDateStringEmpty(String dateString) {
+	public boolean isDateStringEmpty(String dateString) {
 		if (dateString != null && dateString != "" ) {
 			return false;
 		}else {

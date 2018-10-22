@@ -3,19 +3,23 @@ package com.excilys.cdb.validators;
 import java.text.ParseException;
 import java.time.LocalDate;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.excilys.cdb.exceptions.ComputerNameException;
 import com.excilys.cdb.exceptions.DateFormatException;
 import com.excilys.cdb.exceptions.DateRangeException;
 
 import com.excilys.cdb.validators.DateValidator;
 
+
+@Component
 public class ComputerValidator {
 
-	public ComputerValidator() {
-
-	}
-
-	public static boolean validateId(String idString, int nbComputers) throws ParseException {
+	@Autowired
+	private DateValidator dateValidator;
+	
+	public boolean validateId(String idString, int nbComputers) throws ParseException {
 		if(idString == null) {
 			throw new ParseException("Computer ID should be superior to zero", 0);
 		}else {
@@ -29,7 +33,7 @@ public class ComputerValidator {
 		return true;
 	}
 	
-	public static boolean validateName(String computerName) throws ComputerNameException {
+	public boolean validateName(String computerName) throws ComputerNameException {
 		String[] arr = computerName.split("[~#@*+%{}<>\\[\\]|\"\\_^]", 2);
 
 		// if arr.length > 1 name contain one of the character in the patern
@@ -41,7 +45,7 @@ public class ComputerValidator {
 		return true;
 	}
 
-	public static boolean validateDates(String date1, String date2) throws DateFormatException, DateRangeException {
+	public boolean validateDates(String date1, String date2) throws DateFormatException, DateRangeException {
 		LocalDate date = null;
 		
 		LocalDate localDate1 = null;
@@ -50,8 +54,8 @@ public class ComputerValidator {
 		boolean result = false;
 		
 		//Verifying date1 (aka: IntrodcuedDate)
-		if(DateValidator.validDate(date1)) {
-			if(DateValidator.isValidFormat(date1)) {
+		if(dateValidator.validDate(date1)) {
+			if(dateValidator.isValidFormat(date1)) {
 				localDate1 = LocalDate.parse(date1);
 			}else {
 				throw new DateFormatException();
@@ -59,8 +63,8 @@ public class ComputerValidator {
 			
 			//Verifying date2 (aka: discontinuedDate); 
 			//Should be verified only if firstdate is valid
-			if(DateValidator.validDate(date2)) {
-				if(DateValidator.isValidFormat(date2)) {
+			if(dateValidator.validDate(date2)) {
+				if(dateValidator.isValidFormat(date2)) {
 					localDate2 = LocalDate.parse(date2);
 				}else {
 					throw new DateFormatException();
@@ -70,7 +74,7 @@ public class ComputerValidator {
 			}
 			
 			// Checks if discontinued date is greater or equal to introduced date
-			if (DateValidator.isGreaterDate(localDate1, localDate2)) {
+			if (dateValidator.isGreaterDate(localDate1, localDate2)) {
 				result = true;
 			} else if(localDate1 == null && localDate2 != null) {
 				throw new DateRangeException();

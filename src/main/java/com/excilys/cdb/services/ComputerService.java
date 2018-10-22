@@ -25,6 +25,9 @@ public class ComputerService {
 	@Autowired
 	private ComputerDao computerDao;
 	
+	@Autowired
+	private DateValidator dateValidator;
+
 	private static Logger logger = LoggerFactory.getLogger(ComputerService.class);
 	
 	public int getComputerCount() {
@@ -82,7 +85,7 @@ public class ComputerService {
 	public void updateComputer(int id, String columnName, String val) throws DateFormatException {
 		if (columnName == UpdateComputerMenu.INTRODUCED_DATE.getColumnToUpdate()
 				|| columnName == UpdateComputerMenu.DISCONTINUED_DATE.getColumnToUpdate()) {
-			if (DateValidator.isValidFormat(val)) {
+			if (dateValidator.isValidFormat(val)) {
 				computerDao.updateComputer(id, columnName, val);
 			} else {
 				throw new DateFormatException();

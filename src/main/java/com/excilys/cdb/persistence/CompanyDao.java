@@ -13,6 +13,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.excilys.cdb.model.Company;
@@ -27,8 +28,14 @@ public class CompanyDao {
 	@Autowired
 	private ComputerDao computerDao;
 	
+	@Autowired
+	private CompanyRowMapper companyRowMapper;
+	
 	private final Logger logger = LoggerFactory.getLogger("CompanyDao");
 
+	SpringJdbcConfig springDb = new SpringJdbcConfig();
+	private JdbcTemplate jdbcTemplate = new JdbcTemplate(springDb.mysqlDataSource());
+	
 	
 	private static final String GET_ALL = "SELECT id, name FROM company;";
 	private static final String GET_ONE = "SELECT id, name FROM company WHERE id=?;";
@@ -36,18 +43,9 @@ public class CompanyDao {
 	private static final String DELETE = "DELETE FROM company WHERE id = ?";
 	
 	public int getCompanyCount() {
-		int rows = 0;
-		try (Connection con = connection.getConnection()){
-			Statement getCountStmt = con.createStatement();
-			ResultSet getCountRs = getCountStmt.executeQuery(GET_COUNT);
-			if(getCountRs.next()) {
-				rows = getCountRs.getInt("count");
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}  
-		return rows;
+		return jdbcTemplate.queryForObject(GET_COUNT, Integer.class);
 	}
+
 	
 	public Company get(Company company){
 

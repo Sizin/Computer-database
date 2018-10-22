@@ -51,6 +51,10 @@ public class AddComputer extends HttpServlet {
 	private CompanyMapper companyMapper;
 	@Autowired
 	private ComputerMapper computerMapper;
+	@Autowired
+	private ComputerValidator computerValidator;
+	@Autowired
+	private DateValidator dateValidator;
 	
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -90,13 +94,13 @@ public class AddComputer extends HttpServlet {
 		ComputerDto computerDto = new ComputerDto();
 		
 		try {
-			ComputerValidator.validateName(computerName);
+			computerValidator.validateName(computerName);
 			computerDto.setName(computerName);			
 			
-			if(DateValidator.validDate(introducedString)) {
+			if(dateValidator.validDate(introducedString)) {
 				computerDto.setIntroduced(introducedString);
-				if(DateValidator.validDate(discontinuedString)) {
-					if(ComputerValidator.validateDates(introducedString, discontinuedString)) {
+				if(dateValidator.validDate(discontinuedString)) {
+					if(computerValidator.validateDates(introducedString, discontinuedString)) {
 						computerDto.setDiscontinued(discontinuedString);
 					}
 				}
