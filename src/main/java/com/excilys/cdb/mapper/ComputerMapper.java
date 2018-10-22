@@ -23,16 +23,6 @@ public class ComputerMapper {
 	@Autowired
 	private CompanyMapper companyMapper;
 	
-	private ComputerMapper(){
-//		companyMapper = companyMapper.getInstance();
-	}
-
-//	public static ComputerMapper getInstance() {
-//		if(computerMapper == null) {
-//			computerMapper = new ComputerMapper();
-//		}
-//		return computerMapper;	
-//	}
 	
 	public Computer toComputer(ComputerDto computerDto) {
 		ComputerBuilder computerBuilder = new ComputerBuilder();

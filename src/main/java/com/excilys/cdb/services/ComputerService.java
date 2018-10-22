@@ -64,9 +64,8 @@ public class ComputerService {
 		return computer;
 	}
 
-	public long insertComputer(Computer computer) {
-		long newId = computerDao.add(computer);
-		return newId;
+	public void insertComputer(Computer computer) {
+		computerDao.add(computer);
 	}
 	
 	

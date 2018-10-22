@@ -33,6 +33,7 @@ public final class Computer {
 		this.name = name;
 		this.introduced = introducedDate;
 		this.discontinued = discontinuedDate;
+		this.company = company;
 	}
 	
 	public void setId(long id) {

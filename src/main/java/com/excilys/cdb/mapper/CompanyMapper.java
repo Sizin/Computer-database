@@ -27,7 +27,6 @@ public class CompanyMapper {
 	
 	public Company toCompany(CompanyDto companyDto) {
 		CompanyBuilder companyBuilder = new CompanyBuilder();
-
 		
 		if (companyDto.getId() != null) {
 			companyBuilder.setId(Long.parseLong(companyDto.getId()));
@@ -43,7 +42,7 @@ public class CompanyMapper {
 	public CompanyDto toCompanyDto(Company company) {
 		CompanyDto companyDto = new CompanyDto();
 		
-		if(company.getId() >= 0) {
+		if(company.getId() > 0) {
 			companyDto.setId(String.valueOf(company.getId()));
 		}
 		

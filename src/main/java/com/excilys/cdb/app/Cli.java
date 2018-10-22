@@ -198,7 +198,7 @@ public class Cli {
 			}
 
 			Computer computer = computerMapper.toComputer(computerDto);
-			long newComputerId = computerService.insertComputer(computer);	
+			computerService.insertComputer(computer);	
 		}catch(ComputerNameException cpne) {
 			logger.error("Computer name contains invalid characters '[~#@*+%{}<>\\\\[\\\\]|\\\"\\\\_^]'", cpne);
 		}catch(DateFormatException dfe) {

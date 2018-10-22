@@ -103,7 +103,7 @@ public class AddComputer extends HttpServlet {
 			}
 
 			Computer computer = computerMapper.toComputer(computerDto);
-			newComputerId = computerService.insertComputer(computer);	
+			computerService.insertComputer(computer);	
 		}catch(ComputerNameException cpne) {
 			logger.error("Computer name contains invalid characters '[~#@*+%{}<>\\\\[\\\\]|\\\"\\\\_^]'", cpne);
 		}catch(DateFormatException dfe) {
