@@ -2,7 +2,9 @@ package com.excilys.cdb.services;
 
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import com.excilys.cdb.model.Company;
@@ -38,7 +40,7 @@ public class CompanyService{
 		return companyDao.get(company);
 	}
 	
-//	public static void deleteCompany(Company company) {
+	@Transactional(rollbackFor = Throwable.class)
 	public void deleteCompany(Company company) {
 		companyDao.deleteCompany(company);
 	}
