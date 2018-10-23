@@ -86,13 +86,22 @@ public final class Computer {
 	
 	@Override
 	public String toString() {
-		return "Computer{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", introducedDate='" + introduced + '\'' +
-                ", discontinudedDate='" + discontinued + '\'' +
-                ", " + company.toString() +
-                "}\n";
+		if (this.company == null) {
+			return "Computer{" +
+	                "id=" + id +
+	                ", name='" + name + '\'' +
+	                ", introducedDate='" + introduced + '\'' +
+	                ", discontinudedDate='" + discontinued + '\'' +
+	                "}\n";
+		}else {
+			return "Computer{" +
+	                "id=" + id +
+	                ", name='" + name + '\'' +
+	                ", introducedDate='" + introduced + '\'' +
+	                ", discontinudedDate='" + discontinued + '\'' +
+	                ", " + company.toString() +
+	                "}\n";
+		}
 	}
 	
 }

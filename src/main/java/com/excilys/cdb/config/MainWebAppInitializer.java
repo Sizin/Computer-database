@@ -12,20 +12,16 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 import org.springframework.web.context.support.GenericWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
-//@ComponentScan(basePackages ={"com.excilys.cdb.config", "com.excilys.cdb.mapper", "com.excilys.cdb.persistence",
-//"com.excilys.cdb.services", "com.excilys.cdb.servlets", "com.excilys.cdb.app"})
 public class MainWebAppInitializer implements WebApplicationInitializer {
 
 	@Override
-	public void onStartup(final ServletContext sc) throws ServletException {
-		AnnotationConfigWebApplicationContext root = new AnnotationConfigWebApplicationContext();
-
-		root.scan("com.excilys.cdb");
-		sc.addListener(new ContextLoaderListener(root));
-
-		ServletRegistration.Dynamic appServlet = sc.addServlet("mvc", new DispatcherServlet(new GenericWebApplicationContext()));
-		appServlet.setLoadOnStartup(1);
-
+	public void onStartup(final ServletContext servletContext) throws ServletException {
+		AnnotationConfigWebApplicationContext applicationContext = new AnnotationConfigWebApplicationContext();
+		applicationContext.register(SpringJdbcConfig.class);
+		ContextLoaderListener contextLoader = new ContextLoaderListener(applicationContext);
+		servletContext.addListener(contextLoader);
 	}
+
+	
 
 }

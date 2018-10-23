@@ -8,10 +8,13 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
 
 import com.excilys.cdb.app.menus.Menu;
 import com.excilys.cdb.app.menus.UpdateComputerMenu;
+import com.excilys.cdb.config.SpringJdbcConfig;
 import com.excilys.cdb.dto.CompanyDto;
 import com.excilys.cdb.dto.ComputerDto;
 import com.excilys.cdb.exceptions.ComputerNameException;
@@ -42,11 +45,27 @@ public class Cli {
 	private ComputerMapper computerMapper;
 	@Autowired
 	private CompanyMapper companyMapper;
-	
+	@Autowired
+	private ComputerValidator computerValidator;
+	@Autowired
+	private DateValidator dateValidator;
 
-	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	
 	private final Logger logger = LoggerFactory.getLogger("Cli");
+	
+	
+	/**
+	 * Entry point of the Command Line Interface
+	 * 
+	 * @param args
+	 * @throws SQLException
+	 * @throws InputException
+	 */
+	public static void main(String[] args) throws SQLException, InputException {
+		ApplicationContext context = new AnnotationConfigApplicationContext(SpringJdbcConfig.class);
+		Cli clientInterface = context.getBean(Cli.class);
+		clientInterface.start();
+	}  
 	
 	/**
 	 * Command line interface displaying options to the user
@@ -185,13 +204,13 @@ public class Cli {
 
 		try {
 			ComputerDto computerDto = new ComputerDto();
-			ComputerValidator.validateName(name);
+			computerValidator.validateName(name);
 			computerDto.setName(name);			
 			
-			if(DateValidator.validDate(introduced)) {
+			if(dateValidator.validDate(introduced)) {
 				computerDto.setIntroduced(introduced);
-				if(DateValidator.validDate(discontinued)) {
-					if(ComputerValidator.validateDates(introduced, discontinued)) {
+				if(dateValidator.validDate(discontinued)) {
+					if(computerValidator.validateDates(introduced, discontinued)) {
 						computerDto.setDiscontinued(discontinued);
 					}
 				}
@@ -271,7 +290,5 @@ public class Cli {
 		} while (goOn);
 		
 	}
-
-	
 	
 }

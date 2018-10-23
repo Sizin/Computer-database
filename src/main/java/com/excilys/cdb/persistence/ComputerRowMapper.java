@@ -43,9 +43,14 @@ public class ComputerRowMapper implements RowMapper<Computer>{
 
 		Long companyId = resultSet.getLong("computer.company_id");
 		String companyName = resultSet.getString("company.name");
+		
 		if(companyId != null && companyName != null) {
 			computerBuilder.setCompany(new Company(companyId, companyName));
 		}
+		
+//		if(companyId != null) {
+//			computerBuilder.setCompany(new Company(companyId, companyName));
+//		}
 		
 
 		return computerBuilder.build();

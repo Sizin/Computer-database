@@ -1,43 +1,52 @@
-package com.excilys.cdb.persistence;
+package com.excilys.cdb.config;
+
+import java.io.File;
 
 import javax.sql.DataSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
 @PropertySource("classpath:mysql.properties")
+@ComponentScan(basePackages ={"com.excilys.cdb.config", "com.excilys.cdb.mapper", "com.excilys.cdb.persistence",
+"com.excilys.cdb.services", "com.excilys.cdb.servlets", "com.excilys.cdb.app", "com.excilys.cdb.validators" })
 public class SpringJdbcConfig {
 
-	@Autowired
-	Environment environment;
+	private final static Logger logger = LoggerFactory.getLogger("SpringJdbcConfig");
+
+	private HikariDataSource dataSource;
+	private JdbcTemplate jdbcTemplate;
 	
+	public SpringJdbcConfig() {
+    	File dbPropertiesFile = new File(SpringJdbcConfig.class.getClassLoader().getResource("hikari.properties").getFile());
+    	HikariConfig config = new HikariConfig(dbPropertiesFile.getAbsolutePath());
+    	dataSource = new HikariDataSource(config);
+    	try {
+    		Class.forName(dataSource.getDriverClassName());
+    	}catch(ClassNotFoundException e){
+    		logger.error("Error finding Driver", e);
+    	}
+    	jdbcTemplate = new JdbcTemplate(dataSource);
+	}
 	
-	private final String DB_URL = "DB_URL";
-	private final String DB_USERNAME = "DB_USERNAME";
-	private final String DB_DRIVER = "DB_DRIVER";
-	private final String DB_PASSWORD = "DB_PASSWORD";
+	@Bean 
+	JdbcTemplate jdbcTemplate() {
+		return jdbcTemplate;
+	}
 	
-	
-    @Bean
-    public DataSource mysqlDataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-//        dataSource.setUrl(environment.getProperty(DB_URL));
-//        dataSource.setUsername(environment.getProperty(DB_USERNAME));
-//        dataSource.setPassword(environment.getProperty(DB_PASSWORD));
-//        dataSource.setDriverClassName(environment.getProperty(DB_DRIVER));
-        
-        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://127.0.0.1:3306/computer-database-db?useSSL=false");
-        dataSource.setUsername("admincdb");
-        dataSource.setPassword("qwerty1234");
- 
-        return dataSource;
-    }
 	
 }

@@ -50,7 +50,6 @@ public class EditComputer extends HttpServlet {
 	@Autowired
 	private ComputerValidator computerValidator;
 	
-
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
@@ -71,7 +70,7 @@ public class EditComputer extends HttpServlet {
 			int computerId = Integer.parseInt(request.getParameter("computerId"));
 			
 			Computer computer = computerService.getOneComputer(computerId);
-
+			
 			ComputerDto computerDto = computerMapper.toComputerDto(computer);
 
 			request.setAttribute("computer", computerDto);

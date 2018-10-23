@@ -12,8 +12,8 @@ import com.excilys.cdb.exceptions.DateFormatException;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.persistence.ComputerDao;
+import com.excilys.cdb.validators.ComputerValidator;
 import com.excilys.cdb.validators.DateValidator;
-import com.excilys.cdb.validators.MysqlStringEscape;
 
 /**
  * @author Sizin Computer Service Singleton class
@@ -27,6 +27,9 @@ public class ComputerService {
 	
 	@Autowired
 	private DateValidator dateValidator;
+	
+	@Autowired
+	private ComputerValidator computerValidator;
 
 	private static Logger logger = LoggerFactory.getLogger(ComputerService.class);
 	
@@ -91,7 +94,7 @@ public class ComputerService {
 				throw new DateFormatException();
 			}
 		} else if (columnName == UpdateComputerMenu.NAME.getColumnToUpdate()) {
-			val = MysqlStringEscape.escapeStringForMySQL(val);
+			val = computerValidator.escapeStringForMySQL(val);
 			computerDao.updateComputer(id, columnName, val);
 		}
 	}

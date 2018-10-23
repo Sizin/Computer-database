@@ -73,9 +73,10 @@ public class ComputerMapper {
 		
 		if(computer.getCompany() != null) {
 			computerDto.setCompany(companyMapper.toCompanyDto(computer.getCompany()));
+			CompanyDto cpt = companyMapper.toCompanyDto(computer.getCompany());
 		}
 		
-		CompanyDto cpt = companyMapper.toCompanyDto(computer.getCompany());
+
 		
 		return computerDto;
 	}

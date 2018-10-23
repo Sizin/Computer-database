@@ -6,12 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
-
-import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,13 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.excilys.cdb.mapper.ComputerMapper;
-import com.excilys.cdb.model.Company;
+import com.excilys.cdb.config.SpringJdbcConfig;
 import com.excilys.cdb.model.Computer;
-import com.excilys.cdb.model.ComputerBuilder;
-
-
-import com.excilys.cdb.persistence.SpringJdbcConfig;
 
 @Repository
 public class ComputerDao {
@@ -35,14 +26,14 @@ public class ComputerDao {
 	@Autowired
 	private ConnectionManager connection;
 	@Autowired
+	JdbcTemplate jdbcTemplate;
+	@Autowired
 	private ComputerRowMapper computerRowMapper;
 	
-//	@Autowired
-//	private ConnectionTestManager connectionTest;
+	
 
-	private static final String GET = "SELECT id, name, introduced, discontinued, company_id FROM computer WHERE id=?";
+	private static final String GET = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer LEFT JOIN company ON computer.id = company.id WHERE computer.id=?";
 	private static final String GET_ALL = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer LEFT JOIN company ON computer.id = company.id ";
-	private static final String GET_COMPUTER_AND_COMPANY = "SELECT compu.id, compa.name as company_name FROM computer compu LEFT JOIN company compa ON compu.company_id WHERE compu.id=? AND compa.id = ?;";
 	private static final String GET_COUNT = "SELECT COUNT(id) as count FROM computer";
 	private static final String GET_COUNT_SEARCH = "SELECT COUNT(id) as count FROM computer WHERE name LIKE ?";
 	private static final String ADD = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES(?, ?, ?, ?);";
@@ -54,10 +45,6 @@ public class ComputerDao {
 	private static final String SEARCH_LIKE = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer LEFT JOIN company ON computer.id = company.id  WHERE computer.name LIKE ? ORDER BY computer.name ASC ";
 
 	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
-
-	SpringJdbcConfig springDb = new SpringJdbcConfig();
-	private JdbcTemplate jdbcTemplate = new JdbcTemplate(springDb.mysqlDataSource());
-	
 	
 	public int getComputerCount() {
 		return jdbcTemplate.queryForObject(GET_COUNT, Integer.class);
@@ -101,7 +88,7 @@ public class ComputerDao {
 	}
 	
 	public void addCompany(long computerId, long companyId) {
-		if (companyId != 0) {
+		if (companyId >= 0) {
 			jdbcTemplate.update(ADD_COMPANY, new Object[] {companyId, computerId});
 		}
 	}
@@ -145,58 +132,8 @@ public class ComputerDao {
 	 * @return The corresponding computer
 	 */
 	public Computer getOne(int id) {
-
-		Computer computer = null;
-
-		try (Connection con = connection.getConnection()  ){
-			ComputerBuilder computerBuilder = new ComputerBuilder();
-			
-			PreparedStatement getComputerPStmt = con.prepareStatement(GET);
-			getComputerPStmt.setInt(1, id);
-			ResultSet getComputerRs = getComputerPStmt.executeQuery();
-			if(getComputerRs.next()) {
-				computerBuilder.setId(getComputerRs.getInt("id"));
-				computerBuilder.setName(getComputerRs.getString("name"));
-				
-				// Checking if introduced date is not null
-				String introducedString  = getComputerRs.getString("introduced");
-				if(introducedString != null) {
-					LocalDate introducedDate = LocalDate.parse(introducedString, formatter);
-					computerBuilder.setIntroducedDate(introducedDate);
-				}
-				// Checking if discontinued date is not null
-				String discontinuedString = getComputerRs.getString("discontinued");
-				if (discontinuedString != null) {
-					LocalDate discontinuedDate = LocalDate.parse(discontinuedString, formatter);
-					computerBuilder.setDiscontinuedDate(discontinuedDate);
-				}
-				
-				computer = computerBuilder.build();
-				
-				int companyId = getComputerRs.getInt("company_id");
-				if (companyId != 0) {
-					PreparedStatement getComputerAndCompanyPStmt = con.prepareStatement(GET_COMPUTER_AND_COMPANY);
-					getComputerAndCompanyPStmt.setInt(1, id);
-					getComputerAndCompanyPStmt.setInt(2, companyId);
-					ResultSet getComputerCompanyRs = getComputerAndCompanyPStmt.executeQuery();
-					
-					if(getComputerCompanyRs.next()) {
-						String companyName = getComputerCompanyRs.getString("company_name");
-
-						Company company = new Company(companyId, companyName);
-						computer.setCompany(company);
-					}
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} 
-		
-		return computer;
+		return (Computer)jdbcTemplate.queryForObject(GET, new Object[] {id} , computerRowMapper);
 	}
-
-
-	
 
 	/**
 	 * Updates one computer from
@@ -230,17 +167,6 @@ public class ComputerDao {
 		}
 
 		return id;
-	}
-	
-	public static void deleteComputerUsingCompany(Long id, Connection con) {
-		try {
-			PreparedStatement deleteUsingCompanyPStmt = con.prepareStatement(DELETE_USING_COMPANY);
-			deleteUsingCompanyPStmt.setLong(1, id);
-			deleteUsingCompanyPStmt.executeUpdate();
-		} catch (SQLException e) {
-			logger.error("Error deleting computer during delete company transaction", e);
-		}
-
 	}
 
 }
