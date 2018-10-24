@@ -23,8 +23,8 @@ import java.util.*;
 /**
  * Servlet implementation class DeleteComputer
  */
-@WebServlet("/DeleteComputer")
-public class DeleteComputer extends HttpServlet {
+@WebServlet("/DeleteComputer-servlet")
+public class DeleteComputerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@Autowired
@@ -52,22 +52,31 @@ public class DeleteComputer extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		String selection = request.getParameter("selection");
-		String[] arraySelection = selection.split(",");
+
 		
-		List<Computer> computersToDelete  = new ArrayList<Computer>();
-		
-		
-		for(String id : arraySelection) {
-			ComputerDto computerDto = new ComputerDto();
-			computerDto.setId(id);
-			Computer computer = computerMapper.toComputer(computerDto);
-			computersToDelete.add(computer);
+		if(selection != null && selection != "") {
+
+			String[] arraySelection = selection.split(",");
+
+			
+			List<Computer> computersToDelete  = new ArrayList<Computer>();
+
+			for(String id : arraySelection) {
+				ComputerDto computerDto = new ComputerDto();
+				computerDto.setId(id);
+				Computer computer = computerMapper.toComputer(computerDto);
+				computersToDelete.add(computer);
+			}
+					
+			computerService.deleteComputer(computersToDelete);
+			RequestDispatcher rd = request.getRequestDispatcher("Dashboard");
+			rd.forward(request,response);
+		}else {
+			request.getRequestDispatcher("/WEB-INF/views/500.jsp").forward(request, response);
 		}
-				
-		computerService.deleteComputer(computersToDelete);
+
 		
-		RequestDispatcher rd = request.getRequestDispatcher("Dashboard");
-		rd.forward(request,response);
+
 	}
 
 }

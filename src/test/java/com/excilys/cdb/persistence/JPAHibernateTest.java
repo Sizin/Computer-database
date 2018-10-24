@@ -26,7 +26,7 @@ public class JPAHibernateTest {
 
 	@BeforeClass
 	// @BeforeClass : Executed only once before the entire test fixture - Only once
-	public static void init() throws FileNotFoundException, SQLException {
+	public void init() throws FileNotFoundException, SQLException {
 		//Should be closed
 		emf = Persistence.createEntityManagerFactory("mnf-pu-test");
 		em = emf.createEntityManager();

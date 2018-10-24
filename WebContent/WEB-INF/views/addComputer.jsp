@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <head>
 <title>Computer Database</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,7 +24,7 @@
 			<div class="row">
 				<div class="col-xs-8 col-xs-offset-2 box">
 					<h1>Add Computer</h1>
-					<form action="addComputer" method="POST">
+					<%-- <form action="addComputer" method="POST">
 						<fieldset>
 							<div class="form-group">
 								<label for="computerName">Computer name</label> <input
@@ -55,7 +56,39 @@
 							<input type="submit" value="Add" class="btn btn-primary">
 							or <a href="dashboard.html" class="btn btn-default">Cancel</a>
 						</div>
-					</form>
+					</form> --%>
+					
+					<form:form action="addComputer" method="POST" modelAttribute="computer">
+						<fieldset>
+							<div class="form-group">
+								<form:label for="computerName" path="name">Computer name</form:label> 
+								<form:input type="text" class="form-control" name="computerName" placeholder="Computer name" path="name"/>
+							</div>
+							<div class="form-group">
+								<form:label path="introduced" for="introduced">Introduced date</form:label> 
+								<form:input type="date" class="form-control" name="introduced" placeholder="Introduced date" path="introduced"/>
+							</div>
+							<div class="form-group">
+								<form:label path="discontinued" for="discontinued">Discontinued date</form:label> 
+								<form:input path="introduced" type="date" class="form-control" name="discontinued"	placeholder="Discontinued date"/>
+							</div>
+							<div class="form-group">
+								<label for="companyId">Company</label>
+								<input type="hidden" name="nbCompany" value="${nbCompany}" />
+								<form:select path="company" class="form-control" name="companyId" id="companyId">
+								<option selected="selected" value="0"> - No Company - </option>
+							 	<c:forEach items="${companies}" var="company">
+									<option value="${company.id}">${company.name}</option>
+								</c:forEach>									
+								</form:select>
+							</div>
+						</fieldset>
+						<div class="actions pull-right">
+							<input type="submit" value="Add" class="btn btn-primary">
+							or <a href="dashboard.html" class="btn btn-default">Cancel</a>
+						</div>
+					</form:form>
+
 				</div>
 			</div>
 		</div>

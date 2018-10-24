@@ -31,8 +31,6 @@
 		<hikaricp.version>3.2.0</hikaricp.version>
 		<!-- SPRING WEB MVC -->
 		<spring-webmvc.version>5.0.8.RELEASE</spring-webmvc.version>
-		<!-- SPRINGJDBC TEMPLATE -->
-		<springjdbc.version>5.0.8.RELEASE</springjdbc.version>
 	</properties>
 
 	<build>
@@ -119,8 +117,17 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jdbc</artifactId>
-			<version>${springjdbc.version}</version>
+			<version>${spring-webmvc.version}</version>
 		</dependency>
+		
+		<!-- SPRING TEST -->
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-test</artifactId>
+		    <version>${spring-webmvc.version}</version>
+		    <scope>test</scope>
+		</dependency>
+		
 
 		<!-- HIKARICP -->
 		<dependency>

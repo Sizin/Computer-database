@@ -34,10 +34,10 @@ import com.excilys.cdb.model.Computer;
 /**
  * Servlet implementation class EditComputer
  */
-@WebServlet("/editComputer")
-public class EditComputer extends HttpServlet {
+@WebServlet("/editComputer-servlet")
+public class EditComputerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private final Logger logger = LoggerFactory.getLogger(EditComputer.class);
+	private final Logger logger = LoggerFactory.getLogger(EditComputerServlet.class);
 	
 	@Autowired
 	private CompanyService companyService;
@@ -92,7 +92,7 @@ public class EditComputer extends HttpServlet {
 
 		String computerIdString = request.getParameter("computerId");
 
-		if(computerIdString != null) {
+		if(computerIdString != null && computerIdString != "") {
 			Computer computer = new Computer();
 			ComputerDto computerDto = new ComputerDto();
 

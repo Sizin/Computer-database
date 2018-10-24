@@ -23,11 +23,11 @@ import com.excilys.cdb.services.ComputerService;
 /**
  * Servlet implementation class Dashboard
  */
-@WebServlet("/Dashboard")
-public class Dashboard extends HttpServlet {
+@WebServlet("/Dashboard-servlet")
+public class DashboardServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	final static Logger logger = LoggerFactory.getLogger(Dashboard.class);
+	final static Logger logger = LoggerFactory.getLogger(DashboardServlet.class);
 
 	@Autowired
 	private ComputerService computerService;
@@ -48,6 +48,8 @@ public class Dashboard extends HttpServlet {
 			throws ServletException, IOException {
 
 		String search = request.getParameter("search");
+		
+
 		computerPagination.setSearchedWord(search);
 		computerPagination.setNumberOfComputer(computerService.getComputerCount(search));
 		List<Computer> computers = new ArrayList<Computer>();

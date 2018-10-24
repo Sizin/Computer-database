@@ -37,11 +37,11 @@ import com.excilys.cdb.validators.DateValidator;
 /**
  * Servlet implementation class AddComputer
  */
-@WebServlet("/addComputer")
-public class AddComputer extends HttpServlet {
+@WebServlet("/addComputer-servlet")
+public class AddComputerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	final static Logger logger = LoggerFactory.getLogger(Dashboard.class);
+	final static Logger logger = LoggerFactory.getLogger(DashboardServlet.class);
 
 	@Autowired
 	private CompanyService companyService;
@@ -83,7 +83,6 @@ public class AddComputer extends HttpServlet {
 		
 		// Getting POST data
 		String computerName = request.getParameter("computerName");
-		
 		String introducedString = request.getParameter("introduced");
 		String discontinuedString = request.getParameter("discontinued");
 		String companyIdString = request.getParameter("companyId");

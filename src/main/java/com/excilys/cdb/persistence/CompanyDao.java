@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.excilys.cdb.config.SpringJdbcConfig;
+//import com.excilys.cdb.config.SpringJdbcConfig;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.CompanyBuilder;
 import com.excilys.cdb.model.Computer;

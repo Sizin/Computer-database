@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.excilys.cdb.config.SpringJdbcConfig;
+//import com.excilys.cdb.config.SpringJdbcConfig;
 import com.excilys.cdb.model.Computer;
 
 @Repository
@@ -32,19 +32,18 @@ public class ComputerDao {
 	
 	
 
-	private static final String GET = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer LEFT JOIN company ON computer.id = company.id WHERE computer.id=?";
+	private static final String GET = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer LEFT JOIN company ON computer.company_id = company.id WHERE computer.id=?";
 	private static final String GET_ALL = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer LEFT JOIN company ON computer.id = company.id ";
 	private static final String GET_COUNT = "SELECT COUNT(id) as count FROM computer";
-	private static final String GET_COUNT_SEARCH = "SELECT COUNT(id) as count FROM computer WHERE name LIKE ?";
+//	private static final String GET_COUNT_SEARCH = "SELECT COUNT(id) as count FROM computer WHERE name LIKE ?";
+	private static final String GET_COUNT_SEARCH = "SELECT COUNT(computer.id) as count FROM computer LEFT JOIN company ON computer.company_id = company.id  WHERE computer.name LIKE ?";
 	private static final String ADD = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES(?, ?, ?, ?);";
 	private static final String ADD_COMPANY = "UPDATE computer SET company_id= ? WHERE id=?";
 	private static final String UPDATE = "UPDATE computer SET name = ?, introduced = ?, discontinued = ? WHERE id = ?";
 	private static final String UPDATE_COLUMN = "UPDATE computer SET [*column*] = ? WHERE id=?;";
 	private static final String DELETE = "DELETE FROM computer WHERE id=?;";
-	private static final String DELETE_USING_COMPANY = "DELETE FROM computer WHERE company_id = ? ";
-	private static final String SEARCH_LIKE = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer LEFT JOIN company ON computer.id = company.id  WHERE computer.name LIKE ? ORDER BY computer.name ASC ";
+	private static final String SEARCH_LIKE = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer LEFT JOIN company ON computer.company_id = company.id  WHERE computer.name LIKE ? ORDER BY computer.name ASC ";
 
-	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
 	
 	public int getComputerCount() {
 		return jdbcTemplate.queryForObject(GET_COUNT, Integer.class);
@@ -80,9 +79,9 @@ public class ComputerDao {
 		} else {
 			if (offset != 0 && range != 0) {
 				int page = (offset == 1) ? offset : offset * range;
-				return jdbcTemplate.query(SEARCH_LIKE + "LIMIT ?, ?", new Object[] {search, page, range}, computerRowMapper);
+				return jdbcTemplate.query(SEARCH_LIKE + "LIMIT ?, ?", new Object[] {"%" +search+ "%", page, range}, computerRowMapper);
 			} else {
-				return jdbcTemplate.query(SEARCH_LIKE, new Object[] {search}, computerRowMapper);
+				return jdbcTemplate.query(SEARCH_LIKE, new Object[] {"%" + search + "%"}, computerRowMapper);
 			}
 		}
 	}

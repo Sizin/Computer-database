@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 import com.excilys.cdb.app.menus.Menu;
 import com.excilys.cdb.app.menus.UpdateComputerMenu;
-import com.excilys.cdb.config.SpringJdbcConfig;
+import com.excilys.cdb.config.WebConfig;
 import com.excilys.cdb.dto.CompanyDto;
 import com.excilys.cdb.dto.ComputerDto;
 import com.excilys.cdb.exceptions.ComputerNameException;
@@ -62,7 +62,7 @@ public class Cli {
 	 * @throws InputException
 	 */
 	public static void main(String[] args) throws SQLException, InputException {
-		ApplicationContext context = new AnnotationConfigApplicationContext(SpringJdbcConfig.class);
+		ApplicationContext context = new AnnotationConfigApplicationContext(WebConfig.class);
 		Cli clientInterface = context.getBean(Cli.class);
 		clientInterface.start();
 	}  
