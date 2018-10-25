@@ -59,6 +59,15 @@ public class AddComputerController {
 		return "addComputer";
 	}
 
+	@PostMapping("/addComputer")
+	public String postAddComputer(@ModelAttribute("computer")Computer computer, BindingResult result, ModelMap model) {
+		if(result.hasErrors()) {
+			return "500";
+		}
+		computerService.insertComputer(computer);
+		return "redirect:/Dashboard";
+	}
+	
 //	@PostMapping("/addComputer")
 //	public String postAddComputer(@RequestParam Map<String, String> requestParams) {
 //
@@ -102,20 +111,6 @@ public class AddComputerController {
 //		}
 //
 //		return "redirect:/Dashboard";
-//	}
-
-	@PostMapping("/addComputer")
-	public String postAddComputer(@ModelAttribute("computer")Computer computer, BindingResult result, ModelMap model) {
-//		if(result.hasErrors()) {
-//			return "500";
-//		}
-		
-		System.out.println(computer.getCompany());
-		
-		
-		
-		return "redirect:/Dashboard";
-	}
-	
+//	}	
 	
 }

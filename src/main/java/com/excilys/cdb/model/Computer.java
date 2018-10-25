@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 import javax.persistence.*;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 /**
  * @author Sizin
  *
@@ -16,12 +18,18 @@ import javax.persistence.*;
 public final class Computer {
 	@Id
 	private long id;
+
 	private String name;
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate introduced;
+
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate discontinued;
 	
+
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="company_id", foreignKey = @ForeignKey(name = "fk_computer_company_1"))
+//	@JoinColumn(name="company_id", foreignKey = @ForeignKey(name = "fk_computer_company_1"))
 	private Company company = new Company();
 
 	public Computer() {
@@ -44,12 +52,12 @@ public final class Computer {
 		this.name = name;
 	}
 
-	public void setIntroduced(LocalDate introducedDate) {
-		this.introduced = introducedDate;
+	public void setIntroduced(LocalDate introduced) {
+		this.introduced = introduced;
 	}
 
-	public void setDiscontinued(LocalDate discontinuedDate) {
-		this.discontinued = discontinuedDate;
+	public void setDiscontinued(LocalDate discontinued) {
+		this.discontinued = discontinued;
 	}
 
 	public long getId() {
@@ -80,9 +88,7 @@ public final class Computer {
 		return this.company.getName();
 	}
 	
-	public long getCompanyId() {
-		return this.company.getId();
-	}
+
 	
 	@Override
 	public String toString() {
@@ -90,15 +96,15 @@ public final class Computer {
 			return "Computer{" +
 	                "id=" + id +
 	                ", name='" + name + '\'' +
-	                ", introducedDate='" + introduced + '\'' +
-	                ", discontinudedDate='" + discontinued + '\'' +
+	                ", introduced='" + introduced + '\'' +
+	                ", discontinuded='" + discontinued + '\'' +
 	                "}\n";
 		}else {
 			return "Computer{" +
 	                "id=" + id +
 	                ", name='" + name + '\'' +
-	                ", introducedDate='" + introduced + '\'' +
-	                ", discontinudedDate='" + discontinued + '\'' +
+	                ", introduced='" + introduced + '\'' +
+	                ", discontinuded='" + discontinued + '\'' +
 	                ", " + company.toString() +
 	                "}\n";
 		}

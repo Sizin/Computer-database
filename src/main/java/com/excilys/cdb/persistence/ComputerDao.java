@@ -39,7 +39,7 @@ public class ComputerDao {
 	private static final String GET_COUNT_SEARCH = "SELECT COUNT(computer.id) as count FROM computer LEFT JOIN company ON computer.company_id = company.id  WHERE computer.name LIKE ?";
 	private static final String ADD = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES(?, ?, ?, ?);";
 	private static final String ADD_COMPANY = "UPDATE computer SET company_id= ? WHERE id=?";
-	private static final String UPDATE = "UPDATE computer SET name = ?, introduced = ?, discontinued = ? WHERE id = ?";
+	private static final String UPDATE = "UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id= ? WHERE id = ?";
 	private static final String UPDATE_COLUMN = "UPDATE computer SET [*column*] = ? WHERE id=?;";
 	private static final String DELETE = "DELETE FROM computer WHERE id=?;";
 	private static final String SEARCH_LIKE = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name FROM computer LEFT JOIN company ON computer.company_id = company.id  WHERE computer.name LIKE ? ORDER BY computer.name ASC ";
@@ -71,14 +71,16 @@ public class ComputerDao {
 
 		if (search == null) {
 			if (offset != 0 && range != 0) {
-				int page = (offset == 1) ? offset : offset * range;
+				int page = (offset == 1) ? 0 : offset * range;
 				return jdbcTemplate.query(GET_ALL + "LIMIT ?, ?", new Object[] {page, range}, computerRowMapper);
 			} else {
 				return jdbcTemplate.query(GET_ALL, computerRowMapper);
 			}
 		} else {
 			if (offset != 0 && range != 0) {
-				int page = (offset == 1) ? offset : offset * range;
+
+				
+				int page = (offset == 1) ? 0 : offset * range;
 				return jdbcTemplate.query(SEARCH_LIKE + "LIMIT ?, ?", new Object[] {"%" +search+ "%", page, range}, computerRowMapper);
 			} else {
 				return jdbcTemplate.query(SEARCH_LIKE, new Object[] {"%" + search + "%"}, computerRowMapper);
@@ -99,7 +101,7 @@ public class ComputerDao {
 	 * @return the id of the new inserted row
 	 */
 	public void add(Computer computer) {
-		jdbcTemplate.update(ADD, computer.getName(), computer.getIntroduced() == null ? null : computer.getIntroduced().toString(), computer.getDiscontinued() == null ? null : computer.getDiscontinued().toString() , computer.getCompany() == null ? null : computer.getCompany().getId());		
+		jdbcTemplate.update(ADD, computer.getName(), computer.getIntroduced() == null ? null : computer.getIntroduced().toString(), computer.getDiscontinued() == null ? null : computer.getDiscontinued().toString() , computer.getCompany() == null ? null : computer.getCompany().getId() == 0 ? null : computer.getCompany().getId() );		
 	}
 	
 	/**
@@ -111,7 +113,7 @@ public class ComputerDao {
 	 * @return id long, the Id of the updated row
 	 */
 	public void update(Computer computer) {
-		jdbcTemplate.update(UPDATE, computer.getName(), computer.getIntroduced() == null ? null : computer.getIntroduced().toString(), computer.getDiscontinued() == null ? null : computer.getDiscontinued().toString(), computer.getId());
+		jdbcTemplate.update(UPDATE, computer.getName(), computer.getIntroduced() == null ? null : computer.getIntroduced().toString(), computer.getDiscontinued() == null ? null : computer.getDiscontinued().toString(), computer.getCompany() == null ? null : computer.getCompany().getId() == 0 ? null : computer.getCompany().getId(), computer.getId());
 	}
 	
 	/**

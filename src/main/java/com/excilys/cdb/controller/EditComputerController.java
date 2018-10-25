@@ -10,7 +10,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -61,54 +64,63 @@ public class EditComputerController {
 	}
 	
 	@PostMapping("/editComputer")
-	public String postEditComputer(@RequestParam Map<String, String> requestParams, Model model) {
-		String computerIdString = requestParams.get("computerId");
-		if(computerIdString != null && computerIdString != "") {
-			Computer computer = new Computer();
-			ComputerDto computerDto = new ComputerDto();
-			
-			String computerName = requestParams.get("computerName");
-			String computerIntroduced = requestParams.get("introduced");
-			String computerDiscontinued = requestParams.get("discontinued");
-			String companyIdString = requestParams.get("companyId");
-			
-			int numberOfComputer = computerService.getComputerCount();
-			
-			try {
-				computerValidator.validateId(computerIdString, numberOfComputer);
-				computerValidator.validateName(computerName);
-				computerValidator.validateDates(computerIntroduced, computerDiscontinued);
-				
-				computerDto.setId(computerIdString);
-				computerDto.setName(computerName);
-				computerDto.setIntroduced(computerIntroduced);
-				computerDto.setDiscontinued(computerDiscontinued);
-			
-				if (requestParams.get("companyId") != null && requestParams.get("companyId") != "") {
-					int companyId = Integer.parseInt(requestParams.get("companyId"));
-					int nbCompany = companyService.getComputerCount();
-					
-					if(companyId > 0 && companyId < nbCompany) {
-						Company company = new Company(companyId);
-						company = companyService.getCompany(company);
-						computerDto.setCompany(companyMapper.toCompanyDto(company));
-					}
-				}
-				
-				computer = computerMapper.toComputer(computerDto);
-				computerService.updateComputer(computer);				
-			} catch (ParseException e) {
-				logger.debug("Computer Id is incorredt : 0 < id < "+ numberOfComputer);
-			} catch (ComputerNameException e) {
-				logger.debug("Computer name format is invalid");
-			} catch (DateFormatException e) {
-				logger.debug("Date formats should be YYYY-MM-DD");
-			} catch (DateRangeException e) {
-				logger.debug(" Discontinued Data >= Introduced Date (null if Introduced date is null)");
-			}
-		}else {
+	public String postEditComputer(@ModelAttribute("computer")Computer computer,BindingResult result, ModelMap model) {
+		if(result.hasErrors()) {
 			return "500";
 		}
+		computerService.updateComputer(computer);
 		return "redirect:/Dashboard";
 	}
+	
+//	@PostMapping("/editComputer")
+//	public String postEditComputer(@RequestParam Map<String, String> requestParams, Model model) {
+//		String computerIdString = requestParams.get("computerId");
+//		if(computerIdString != null && computerIdString != "") {
+//			Computer computer = new Computer();
+//			ComputerDto computerDto = new ComputerDto();
+//			
+//			String computerName = requestParams.get("computerName");
+//			String computerIntroduced = requestParams.get("introduced");
+//			String computerDiscontinued = requestParams.get("discontinued");
+//			String companyIdString = requestParams.get("companyId");
+//			
+//			int numberOfComputer = computerService.getComputerCount();
+//			
+//			try {
+//				computerValidator.validateId(computerIdString, numberOfComputer);
+//				computerValidator.validateName(computerName);
+//				computerValidator.validateDates(computerIntroduced, computerDiscontinued);
+//				
+//				computerDto.setId(computerIdString);
+//				computerDto.setName(computerName);
+//				computerDto.setIntroduced(computerIntroduced);
+//				computerDto.setDiscontinued(computerDiscontinued);
+//			
+//				if (requestParams.get("companyId") != null && requestParams.get("companyId") != "") {
+//					int companyId = Integer.parseInt(requestParams.get("companyId"));
+//					int nbCompany = companyService.getComputerCount();
+//					
+//					if(companyId > 0 && companyId < nbCompany) {
+//						Company company = new Company(companyId);
+//						company = companyService.getCompany(company);
+//						computerDto.setCompany(companyMapper.toCompanyDto(company));
+//					}
+//				}
+//				
+//				computer = computerMapper.toComputer(computerDto);
+//				computerService.updateComputer(computer);				
+//			} catch (ParseException e) {
+//				logger.debug("Computer Id is incorredt : 0 < id < "+ numberOfComputer);
+//			} catch (ComputerNameException e) {
+//				logger.debug("Computer name format is invalid");
+//			} catch (DateFormatException e) {
+//				logger.debug("Date formats should be YYYY-MM-DD");
+//			} catch (DateRangeException e) {
+//				logger.debug(" Discontinued Data >= Introduced Date (null if Introduced date is null)");
+//			}
+//		}else {
+//			return "500";
+//		}
+//		return "redirect:/Dashboard";
+//	}
 }

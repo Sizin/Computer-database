@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <head>
 <title>Computer Database</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,30 +15,52 @@
 
 </head>
 <body>
-	<header class="navbar navbar-inverse navbar-fixed-top">
-		<div class="container">
-			<a class="navbar-brand" href="/CdbSinan/Dashboard"> Application -
-				Computer Database </a>
-		</div>
-	</header>
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+	    <div class="container">
+	        <div class="navbar-header">
+	          <a class="navbar-brand" href="/CdbSinan/Dashboard"><spring:message code="lang.dashboard.title"/></a>
+	        </div>
+	        <div id="navbar" class="navbar-collapse collapse navbar-right">
+	            <ul class="nav navbar-nav">
+	                <li class="dropdown">
+	                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span><spring:message code="lang.locales.choose"/></span></a>
+	                    <ul class="dropdown-menu" role="menu">
+	            	        <li>
+		            	        <a href="/CdbSinan/Dashboard?lang=en"> 
+		            	        	<img src="<c:url value="/resources/img/flag_en.png"/>" alt="flag" class="img-thumbnail icon-small">
+		            	        	<span><spring:message code="lang.locales.en"/></span>
+		            	        </a>
+		            	    </li>
+							<li>
+		            	        <a href="/CdbSinan/Dashboard?lang=fr"> 
+		            	        	<img src="<c:url value="/resources/img/flag_fr.png"/>" alt="flag" class="img-thumbnail icon-small">
+		            	        	<span><spring:message code="lang.locales.fr"/></span>
+		            	        </a>
+		            	    </li>
+	        	        </ul>
+	                </li>
+	            </ul>
+	        </div>
+	    </div>
+	</nav>
+	
 
 	<section id="main">
 		<div class="container">
-			<h1 id="homeTitle">${numberOfComputer} Computers found</h1>
+			<h1 id="homeTitle">${numberOfComputer} <spring:message code="lang.dashboard.computersFound"/></h1>
 			<div id="actions" class="form-horizontal">
 				<div class="pull-left">
 					<form id="searchForm" action="Dashboard" method="GET" class="form-inline">
 
 						<input type="search" id="searchbox" name="search"
-							class="form-control" placeholder="Search name" /> <input
+							class="form-control" placeholder="<spring:message code="lang.dashboard.searchHolder"/>" /> <input
 							type="submit" id="searchsubmit" value="Filter by name"
 							class="btn btn-primary" />
 					</form>
 				</div>
 				<div class="pull-right">
-					<a class="btn btn-success" id="addComputer" href="addComputer">Add
-						Computer</a> <a class="btn btn-default" id="editComputer" href="#"
-						onclick="$.fn.toggleEditMode();">Edit</a>
+					<a class="btn btn-success" id="addComputer" href="addComputer"><spring:message code="lang.dashboard.add"/></a> 
+					<a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();"><spring:message code="lang.dashboard.edit"/></a>
 				</div>
 			</div>
 		</div>
@@ -59,12 +83,12 @@
 									class="fa fa-trash-o fa-lg"></i>
 							</a>
 						</span></th>
-						<th>Computer name</th>
-						<th>Introduced date</th>
+						<th><spring:message code="lang.dashboard.columnName"/></th>
+						<th><spring:message code="lang.dashboard.columnIntroduced"/></th>
 						<!-- Table header for Discontinued Date -->
-						<th>Discontinued date</th>
+						<th><spring:message code="lang.dashboard.columnDiscontinued"/></th>
 						<!-- Table header for Company -->
-						<th>Company</th>
+						<th><spring:message code="lang.dashboard.columnCompany"/></th>
 
 					</tr>
 				</thead>

@@ -70,16 +70,16 @@
 							</div>
 							<div class="form-group">
 								<form:label path="discontinued" for="discontinued">Discontinued date</form:label> 
-								<form:input path="introduced" type="date" class="form-control" name="discontinued"	placeholder="Discontinued date"/>
+								<form:input type="date" class="form-control" name="discontinued"	placeholder="Discontinued date" path="discontinued"/>
 							</div>
 							<div class="form-group">
 								<label for="companyId">Company</label>
 								<input type="hidden" name="nbCompany" value="${nbCompany}" />
-								<form:select path="company" class="form-control" name="companyId" id="companyId">
-								<option selected="selected" value="0"> - No Company - </option>
-							 	<c:forEach items="${companies}" var="company">
-									<option value="${company.id}">${company.name}</option>
-								</c:forEach>									
+								<form:select path="company.id" class="form-control" name="companyId" id="companyId">
+									<option selected="selected" value="0"> - No Company - </option>
+								 	<c:forEach items="${companies}" var="company">
+										<option value="${company.id}">${company.name}</option>
+									</c:forEach>									
 								</form:select>
 							</div>
 						</fieldset>

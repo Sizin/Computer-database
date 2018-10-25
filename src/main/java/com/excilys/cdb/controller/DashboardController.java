@@ -3,6 +3,7 @@ package com.excilys.cdb.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Locale;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class DashboardController {
 
 //	@GetMapping
 	@GetMapping("/Dashboard")
-	public String getDashboard(@RequestParam Map<String,String> requestParams, Model model) {
+	public String getDashboard(Locale locale, @RequestParam Map<String,String> requestParams, Model model) {
 		
 		String search = requestParams.get("search");
 		computerPagination.setSearchedWord(search);
@@ -55,7 +56,7 @@ public class DashboardController {
 			computerPagination.setNumberOfComputer(computerService.getComputerCount(search));
 			computerPagination.setPages();
 			computers = computerService.showComputers(computerPagination.getCurrentPage(),	computerPagination.getResultPerPage(), search);
-			
+
 		}else if(computerPagination.getSearchedWord() != null && computerPagination.getSearchedWord() != "") {
 			computerPagination.setNumberOfComputer(computerService.getComputerCount(search));
 			computerPagination.setPages();

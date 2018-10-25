@@ -23,7 +23,7 @@ public class ComputerRowMapper implements RowMapper<Computer>{
 		
 		Long id = resultSet.getLong("computer.id");
 		computerBuilder.setId(id);
-		
+	
 		String name = resultSet.getString("computer.name");
 		computerBuilder.setName(name);
 
