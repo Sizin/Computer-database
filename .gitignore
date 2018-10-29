@@ -1,6 +1,8 @@
 
 # Created by https://www.gitignore.io/api/java,eclipse,intellij
 
+.gitignore.springmvc
+
 # Mysql Logs
 mysql.properties
 
