@@ -1,7 +1,6 @@
 package com.excilys.cdb.app;
 
 import java.sql.SQLException;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 import com.excilys.cdb.app.menus.Menu;
 import com.excilys.cdb.app.menus.UpdateComputerMenu;
-import com.excilys.cdb.config.WebConfig;
+import com.excilys.cdb.config.ClientInterfaceConfig;
 import com.excilys.cdb.dto.CompanyDto;
 import com.excilys.cdb.dto.ComputerDto;
 import com.excilys.cdb.exceptions.ComputerNameException;
@@ -36,7 +35,7 @@ import com.excilys.cdb.validators.DateValidator;
 @Component
 public class Cli {
 
-	public Scanner scanner = new Scanner(System.in);
+	private Scanner scanner = new Scanner(System.in);
 	@Autowired
 	private ComputerService computerService;
 	@Autowired
@@ -62,7 +61,7 @@ public class Cli {
 	 * @throws InputException
 	 */
 	public static void main(String[] args) throws SQLException, InputException {
-		ApplicationContext context = new AnnotationConfigApplicationContext(WebConfig.class);
+		ApplicationContext context = new AnnotationConfigApplicationContext(ClientInterfaceConfig.class);
 		Cli clientInterface = context.getBean(Cli.class);
 		clientInterface.start();
 	}  
@@ -129,10 +128,10 @@ public class Cli {
 	}
 
 	public void showCompanies() {
-		List<Company> companies = companyService.showCompanies();
-		for (Company company : companies) {
-			System.out.println(company.toString());
-		}
+//		List<Company> companies = companyService.showCompanies();
+//		for (Company company : companies) {
+//			System.out.println(company.toString());
+//		}
 	}
 
 	public void showComputer() {
@@ -162,7 +161,7 @@ public class Cli {
 //		long id = Long.parseLong(scanner.nextLine());
 		
 //		Company company = new Company(id);
-		companyService.deleteCompany(company);
+//		companyService.deleteCompany(company);
 		
 
 	}
@@ -207,24 +206,24 @@ public class Cli {
 			computerValidator.validateName(name);
 			computerDto.setName(name);			
 			
-			if(dateValidator.validDate(introduced)) {
-				computerDto.setIntroduced(introduced);
-				if(dateValidator.validDate(discontinued)) {
-					if(computerValidator.validateDates(introduced, discontinued)) {
-						computerDto.setDiscontinued(discontinued);
-					}
-				}
-			}
+//			if(dateValidator.validDate(introduced)) {
+//				computerDto.setIntroduced(introduced);
+//				if(dateValidator.validDate(discontinued)) {
+//					if(computerValidator.validateDates(introduced, discontinued)) {
+//						computerDto.setDiscontinued(discontinued);
+//					}
+//				}
+//			}
 
 			Computer computer = computerMapper.toComputer(computerDto);
 			computerService.insertComputer(computer);	
 		}catch(ComputerNameException cpne) {
 			logger.error("Computer name contains invalid characters '[~#@*+%{}<>\\\\[\\\\]|\\\"\\\\_^]'", cpne);
-		}catch(DateFormatException dfe) {
-			logger.error("Date formats should be YYYY-MM-DD", dfe);
-		}catch(DateRangeException dre) {
-			logger.error(" Discontinued Data >= Introduced Date (null if Introduced date is null)", dre);
-		}
+		}//catch(DateFormatException dfe) {
+//			logger.error("Date formats should be YYYY-MM-DD", dfe);
+//		}catch(DateRangeException dre) {
+//			logger.error(" Discontinued Data >= Introduced Date (null if Introduced date is null)", dre);
+//		}
 
 	}
 	
