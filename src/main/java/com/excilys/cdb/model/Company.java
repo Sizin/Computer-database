@@ -12,10 +12,8 @@ import javax.persistence.*;
 	    @NamedQuery(name = "Company.getAll", query = "SELECT compa FROM Company compa")
 	})
 public class Company {
-	@Id @GeneratedValue
-	@Column(name = "id")
+	@Id
 	private long id;
-	@Column(name = "name")
 	private String name;	
 	
 	public Company() {

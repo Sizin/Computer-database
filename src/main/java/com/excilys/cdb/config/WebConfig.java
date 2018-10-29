@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 @EnableWebMvc
 @PropertySource("classpath:mysql.properties")
 @ComponentScan(basePackages = { "com.excilys.cdb.config", "com.excilys.cdb.mapper", "com.excilys.cdb.persistence",
-		"com.excilys.cdb.services", "com.excilys.cdb.servlets", "com.excilys.cdb.validators",
+		"com.excilys.cdb.services", "com.excilys.cdb.servlets", "com.excilys.cdb.app", "com.excilys.cdb.validators",
 		"com.excilys.cdb.controller" })
 public class WebConfig implements WebMvcConfigurer {
 
