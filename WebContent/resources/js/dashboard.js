@@ -7,15 +7,6 @@ $( document ).ready(function() {
     $("#range" + range).addClass("active");
 });
 
-$("#locales").change(function () {
-    var selectedOption = $('#locales').val();
-
-    if (selectedOption != ''){
-    	console.log(selectedOption)
-    	document.location =  "/CdbSinan/Dashboard?lang="+selectedOption;
-    }
-});
-
 //On load
 $(function() {
     // Default: hide edit mode

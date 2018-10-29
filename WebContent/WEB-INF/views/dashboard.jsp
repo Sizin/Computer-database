@@ -4,46 +4,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <head>
-<title>Computer Database</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta charset="utf-8">
-<!-- Bootstrap -->
-<link href="<c:url value="/resources/css/bootstrap.min.css"/>" rel="stylesheet" media="screen">
-<link href="<c:url value="/resources/css/font-awesome.css"/>" rel="stylesheet" media="screen">
-<link href="<c:url value="/resources/css/main.css"/>" rel="stylesheet" media="screen">
-<link href="<c:url value="/resources/css/dashboard.css"/>" rel="stylesheet" media="screen">
+	<title>Computer Database</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8">
+	<!-- Bootstrap -->
+	<link href="<c:url value="/resources/css/bootstrap.min.css"/>" rel="stylesheet" media="screen">
+	<link href="<c:url value="/resources/css/font-awesome.css"/>" rel="stylesheet" media="screen">
+	<link href="<c:url value="/resources/css/main.css"/>" rel="stylesheet" media="screen">
+	<link href="<c:url value="/resources/css/dashboard.css"/>" rel="stylesheet" media="screen">
 
 </head>
+
 <body>
-	<nav class="navbar navbar-inverse navbar-fixed-top">
-	    <div class="container">
-	        <div class="navbar-header">
-	          <a class="navbar-brand" href="/CdbSinan/Dashboard"><spring:message code="lang.dashboard.title"/></a>
-	        </div>
-	        <div id="navbar" class="navbar-collapse collapse navbar-right">
-	            <ul class="nav navbar-nav">
-	                <li class="dropdown">
-	                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span><spring:message code="lang.locales.choose"/></span></a>
-	                    <ul class="dropdown-menu" role="menu">
-	            	        <li>
-		            	        <a href="/CdbSinan/Dashboard?lang=en"> 
-		            	        	<img src="<c:url value="/resources/img/flag_en.png"/>" alt="flag" class="img-thumbnail icon-small">
-		            	        	<span><spring:message code="lang.locales.en"/></span>
-		            	        </a>
-		            	    </li>
-							<li>
-		            	        <a href="/CdbSinan/Dashboard?lang=fr"> 
-		            	        	<img src="<c:url value="/resources/img/flag_fr.png"/>" alt="flag" class="img-thumbnail icon-small">
-		            	        	<span><spring:message code="lang.locales.fr"/></span>
-		            	        </a>
-		            	    </li>
-	        	        </ul>
-	                </li>
-	            </ul>
-	        </div>
-	    </div>
-	</nav>
-	
+	<jsp:include page="/WEB-INF/views/layout/navbar.jsp" />
 
 	<section id="main">
 		<div class="container">
@@ -53,8 +26,8 @@
 					<form id="searchForm" action="Dashboard" method="GET" class="form-inline">
 
 						<input type="search" id="searchbox" name="search"
-							class="form-control" placeholder="<spring:message code="lang.dashboard.searchHolder"/>" /> <input
-							type="submit" id="searchsubmit" value="Filter by name"
+							class="form-control" placeholder='<spring:message code="lang.dashboard.searchHolder"/>' /> <input
+							type="submit" id="searchsubmit" value='<spring:message code="lang.dashboard.filter"/>'
 							class="btn btn-primary" />
 					</form>
 				</div>
@@ -165,10 +138,9 @@
 			</div>
 		</div>
 	</footer>
-
 	<script src="<c:url value="/resources/js/jquery.min.js"/>"></script>
 	<script src="<c:url value="/resources/js/bootstrap.min.js"/>"></script>
+	<script src="<c:url value="/resources/js/navbar.js"/>"></script>
 	<script src="<c:url value="/resources/js/dashboard.js"/>"></script>
-
 </body>
 </html>

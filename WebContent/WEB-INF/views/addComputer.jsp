@@ -2,81 +2,45 @@
 <html>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+
 <head>
 <title>Computer Database</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="utf-8">
 <!-- Bootstrap -->
-<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-<link href="css/font-awesome.css" rel="stylesheet" media="screen">
-<link href="css/main.css" rel="stylesheet" media="screen">
+<link href="<c:url value="/resources/css/bootstrap.min.css"/>" rel="stylesheet" media="screen">
+<link href="<c:url value="/resources/css/font-awesome.css"/>" media="screen">
+<link href="<c:url value="/resources/css/main.css"/>" rel="stylesheet" media="screen">
 </head>
 <body>
-	<header class="navbar navbar-inverse navbar-fixed-top">
-		<div class="container">
-			<a class="navbar-brand" href="Dashboard"> Application - Computer
-				Database </a>
-		</div>
-	</header>
-
+	<jsp:include page="/WEB-INF/views/layout/navbar.jsp" />
+	
 	<section id="main">
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-8 col-xs-offset-2 box">
-					<h1>Add Computer</h1>
-					<%-- <form action="addComputer" method="POST">
-						<fieldset>
-							<div class="form-group">
-								<label for="computerName">Computer name</label> <input
-									type="text" class="form-control" name="computerName"
-									placeholder="Computer name">
-							</div>
-							<div class="form-group">
-								<label for="introduced">Introduced date</label> <input
-									type="date" class="form-control" name="introduced"
-									placeholder="Introduced date">
-							</div>
-							<div class="form-group">
-								<label for="discontinued">Discontinued date</label> <input
-									type="date" class="form-control" name="discontinued"
-									placeholder="Discontinued date">
-							</div>
-							<div class="form-group">
-								<label for="companyId">Company</label>
-								<input type="hidden" name="nbCompany" value="${nbCompany}" />
-								<select	class="form-control" name="companyId" id="companyId">
-								<option selected="selected" value="0"> - No Company - </option>
-							 	<c:forEach items="${companies}" var="company">
-									<option value="${company.id}">${company.name}</option>
-								</c:forEach>									
-								</select>
-							</div>
-						</fieldset>
-						<div class="actions pull-right">
-							<input type="submit" value="Add" class="btn btn-primary">
-							or <a href="dashboard.html" class="btn btn-default">Cancel</a>
-						</div>
-					</form> --%>
-					
+					<h1><spring:message code="lang.addComputer.title"/></h1>
 					<form:form action="addComputer" method="POST" modelAttribute="computer">
 						<fieldset>
 							<div class="form-group">
-								<form:label for="computerName" path="name">Computer name</form:label> 
-								<form:input type="text" class="form-control" name="computerName" placeholder="Computer name" path="name"/>
+								<form:label for="computerName" path="name"><spring:message code="lang.addComputer.name"/></form:label> 
+								<form:input path="name" type="text" class="form-control" name="computerName" placeholder="Computer name" />
 							</div>
 							<div class="form-group">
-								<form:label path="introduced" for="introduced">Introduced date</form:label> 
+								<form:label path="introduced" for="introduced"><spring:message code="lang.addComputer.introduced"/></form:label> 
 								<form:input type="date" class="form-control" name="introduced" placeholder="Introduced date" path="introduced"/>
 							</div>
 							<div class="form-group">
-								<form:label path="discontinued" for="discontinued">Discontinued date</form:label> 
+								<form:label path="discontinued" for="discontinued"><spring:message code="lang.addComputer.discontinued"/></form:label> 
 								<form:input type="date" class="form-control" name="discontinued"	placeholder="Discontinued date" path="discontinued"/>
 							</div>
 							<div class="form-group">
-								<label for="companyId">Company</label>
+								<label for="companyId"><spring:message code="lang.addComputer.company"/></label>
 								<input type="hidden" name="nbCompany" value="${nbCompany}" />
 								<form:select path="company.id" class="form-control" name="companyId" id="companyId">
-									<option selected="selected" value="0"> - No Company - </option>
+									<option selected="selected" value="0"><spring:message code="lang.addComputer.noCompany"/></option>
 								 	<c:forEach items="${companies}" var="company">
 										<option value="${company.id}">${company.name}</option>
 									</c:forEach>									
@@ -84,8 +48,9 @@
 							</div>
 						</fieldset>
 						<div class="actions pull-right">
-							<input type="submit" value="Add" class="btn btn-primary">
-							or <a href="dashboard.html" class="btn btn-default">Cancel</a>
+							<input type="submit" value="<spring:message code="lang.addComputer.add"/>" class="btn btn-primary">
+							<spring:message code="lang.addComputer.or"/>
+							<a href="dashboard.html" class="btn btn-default"><spring:message code="lang.addComputer.cancel"/></a>
 						</div>
 					</form:form>
 
@@ -93,5 +58,13 @@
 			</div>
 		</div>
 	</section>
+	
+	
+	<script src="<c:url value="/resources/js/jquery.min.js"/>"></script>
+	<script src="<c:url value="/resources/js/bootstrap.min.js"/>"></script>
+	<script src="<c:url value="/resources/js/navbar.js"/>"></script>
+	
+	
+	
 </body>
 </html>

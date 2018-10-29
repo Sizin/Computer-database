@@ -27,3 +27,12 @@ input[type='checkbox'] {
     border-radius: 5px;
     white-space: nowrap;
 }
+
+.languageButton{
+	cursor:pointer;
+}
+.languageSelected{
+	cursor:pointer;
+}
+
+
