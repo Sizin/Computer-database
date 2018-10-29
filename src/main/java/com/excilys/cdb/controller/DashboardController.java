@@ -87,7 +87,7 @@ public class DashboardController {
 		return "dashboard";
 	}
 	
-	@RequestMapping(value="/**",method = RequestMethod.GET)
+	@RequestMapping(value="/**",method = {RequestMethod.GET, RequestMethod.POST})
 	public String getAnythingelse(){
 		return "404";
 	}
