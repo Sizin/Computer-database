@@ -19,6 +19,8 @@ $(".languageSelected").click(function(){
 		    newURL = oldURL.substring(0, index);
 			document.location = newURL + "?lang=" + lang;
 		}
+	}else{
+		document.location = newURL + "?lang=" + lang;
 	}
 
 });

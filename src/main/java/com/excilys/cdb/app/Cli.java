@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 import com.excilys.cdb.app.menus.Menu;
 import com.excilys.cdb.app.menus.UpdateComputerMenu;
 import com.excilys.cdb.config.ClientInterfaceConfig;
-import com.excilys.cdb.config.WebConfig;
 import com.excilys.cdb.dto.CompanyDto;
 import com.excilys.cdb.dto.ComputerDto;
 import com.excilys.cdb.exceptions.ComputerNameException;
