@@ -112,7 +112,7 @@
 			<artifactId>spring-webmvc</artifactId>
 			<version>${spring-webmvc.version}</version>
 		</dependency>
-	
+
 		<!-- SPRING JDBC TEMPLATE -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -120,14 +120,21 @@
 			<version>${spring-webmvc.version}</version>
 		</dependency>
 		
+		<!-- SPRING ORM -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+			<version>${spring-webmvc.version}</version>
+		</dependency>
+
 		<!-- SPRING TEST -->
 		<dependency>
-		    <groupId>org.springframework</groupId>
-		    <artifactId>spring-test</artifactId>
-		    <version>${spring-webmvc.version}</version>
-		    <scope>test</scope>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring-webmvc.version}</version>
+			<scope>test</scope>
 		</dependency>
-		
+
 
 		<!-- HIKARICP -->
 		<dependency>
