@@ -39,15 +39,6 @@ public class HikariAppConfig {
 	JdbcTemplate jdbcTemplate() {
 		return jdbcTemplate;
 	}
-	
-	@Bean
-	public ViewResolver viewResolver() {
-		InternalResourceViewResolver bean = new InternalResourceViewResolver();
-		bean.setPrefix("/WEB-INF/views/");
-		bean.setSuffix(".jsp");
-		return bean;
-	}
-	
-	
+
 	
 }
