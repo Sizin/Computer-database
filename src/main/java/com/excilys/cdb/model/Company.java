@@ -7,13 +7,15 @@ import javax.persistence.*;
  *
  */
 @Entity
-@Table(name="Company")
-@NamedQueries(value = {
-	    @NamedQuery(name = "Company.getAll", query = "SELECT compa FROM Company compa")
-	})
+@Table(name="company")
+//@NamedQueries(value = {
+//	    @NamedQuery(name = "Company.getAll", query = "SELECT compa FROM Company compa")
+//	})
 public class Company {
 	@Id
+	@Column(name = "id")
 	private long id;
+	@Column(name = "name")
 	private String name;	
 	
 	public Company() {

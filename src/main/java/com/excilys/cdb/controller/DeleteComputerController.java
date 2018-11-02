@@ -14,11 +14,16 @@ import com.excilys.cdb.dto.ComputerDto;
 import com.excilys.cdb.mapper.ComputerMapper;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.services.ComputerService;
+import com.excilys.cdb.services.HibernateComputerService;
 
 @Controller
 @RequestMapping
 public class DeleteComputerController {
 
+	
+	@Autowired
+	private HibernateComputerService hcomputerService;
+	
 	@Autowired
 	private ComputerService computerService;
 	@Autowired

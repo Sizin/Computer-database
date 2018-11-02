@@ -11,25 +11,29 @@ import org.springframework.format.annotation.DateTimeFormat;
  *
  */
 @Entity
-@Table(name="Computer")
-@NamedQueries(value = {
-	    @NamedQuery(name = "Computer.getAll", query = "SELECT compu FROM Computer compu")
-	})
+@Table(name="computer")
+//@NamedQueries(value = {
+//	    @NamedQuery(name = "Computer.getAll", query = "SELECT compu FROM Computer compu")
+//	})
 public final class Computer {
 	@Id
+	@Column(name = "id")
 	private long id;
-
+	
+	@Column(name = "name")
 	private String name;
 	
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Column(name = "introduced")
 	private LocalDate introduced;
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Column(name = "discontinued")
 	private LocalDate discontinued;
 	
 
 	@ManyToOne(cascade = CascadeType.ALL)
-//	@JoinColumn(name="company_id", foreignKey = @ForeignKey(name = "fk_computer_company_1"))
+	@JoinColumn(name="company_id", foreignKey = @ForeignKey(name = "fk_computer_company_1"))
 	private Company company = new Company();
 
 	public Computer() {

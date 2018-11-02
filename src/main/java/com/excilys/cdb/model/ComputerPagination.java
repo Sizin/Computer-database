@@ -4,12 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.excilys.cdb.services.ComputerService;
+import com.excilys.cdb.services.HibernateComputerService;
 
 @Component
 public class ComputerPagination {
 	
-	@Autowired
-	private ComputerService computerService;
+//	@Autowired
+//	private ComputerService computerService;
+
+//	@Autowired
+//	private HibernateComputerService hcomputerService;
 	
 	protected int numberOfComputer;
 	protected int resultPerPage;
@@ -68,13 +72,13 @@ public class ComputerPagination {
 		}
 	}
 	
-	public ComputerService getComputerService() {
-		return computerService;
-	}
-
-	public void setComputerService(ComputerService computerService) {
-		this.computerService = computerService;
-	}
+//	public ComputerService getComputerService() {
+//		return computerService;
+//	}
+//
+//	public void setComputerService(ComputerService computerService) {
+//		this.computerService = computerService;
+//	}
 
 	public int getNumberOfComputer() {
 		return numberOfComputer;

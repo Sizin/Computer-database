@@ -28,6 +28,8 @@ import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.services.CompanyService;
 import com.excilys.cdb.services.ComputerService;
+import com.excilys.cdb.services.HibernateCompanyService;
+import com.excilys.cdb.services.HibernateComputerService;
 import com.excilys.cdb.validators.ComputerValidator;
 
 @Controller
@@ -36,7 +38,11 @@ public class EditComputerController {
 	final static Logger logger = LoggerFactory.getLogger(AddComputerController.class);
 	
 	@Autowired
-	private CompanyService companyService;
+	private HibernateComputerService hcomputerService;
+	
+	@Autowired
+	private HibernateCompanyService hcompanyService;
+
 	@Autowired
 	private ComputerService computerService;
 	@Autowired
@@ -48,14 +54,14 @@ public class EditComputerController {
 	
 	@GetMapping("/editComputer")
 	public String getEditComputer(@RequestParam Map<String,String> requestParams, Model model) {
-		List<Company> companies = companyService.showCompanies();
-		
+		List<Company> companies = hcompanyService.getAll();
+
 		if(requestParams.get("computerId") != null && requestParams.get("computerId") != "") {
 			int computerId = Integer.parseInt(requestParams.get("computerId"));
-			Computer computer = computerService.getOneComputer(computerId);
-			ComputerDto computerDto = computerMapper.toComputerDto(computer);
+			Computer computer = hcomputerService.getComputerById(computerId);
 			
-			model.addAttribute("computer", computerDto);
+			model.addAttribute("computer", computer);
+			
 			model.addAttribute("companies", companies);
 			return "editComputer";
 		}else {
@@ -68,7 +74,7 @@ public class EditComputerController {
 		if(result.hasErrors()) {
 			return "500";
 		}
-		computerService.updateComputer(computer);
+		hcomputerService.updateComputer(computer);
 		return "redirect:/Dashboard";
 	}
 	

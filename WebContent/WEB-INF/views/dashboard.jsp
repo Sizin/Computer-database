@@ -8,10 +8,11 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta charset="utf-8">
 	<!-- Bootstrap -->
-	<link href="<c:url value="/resources/css/bootstrap.min.css"/>" rel="stylesheet" media="screen">
-	<link href="<c:url value="/resources/css/font-awesome.css"/>" rel="stylesheet" media="screen">
-	<link href="<c:url value="/resources/css/main.css"/>" rel="stylesheet" media="screen">
-	<link href="<c:url value="/resources/css/dashboard.css"/>" rel="stylesheet" media="screen">
+	
+	<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+	<link href="css/font-awesome.css" rel="stylesheet" media="screen">
+	<link href="css/main.css" type="text/css" rel="stylesheet" media="screen">
+	<link href="css/dashboard.css" type="text/css" rel="stylesheet" media="screen">
 
 </head>
 
@@ -86,9 +87,7 @@
 
 	<footer class="navbar-fixed-bottom">
 		<div class="container text-center">
-
-
-
+		
 			<ul class="pagination">
 				<!-- First Page -->
 				<c:if test="${currentPage != 1}">
@@ -138,9 +137,11 @@
 			</div>
 		</div>
 	</footer>
-	<script src="<c:url value="/resources/js/jquery.min.js"/>"></script>
-	<script src="<c:url value="/resources/js/bootstrap.min.js"/>"></script>
-	<script src="<c:url value="/resources/js/navbar.js"/>"></script>
-	<script src="<c:url value="/resources/js/dashboard.js"/>"></script>
+
+	<script src="js/jquery.min.js"></script>	
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/navbar.js"></script>
+	<script src="js/dashboard.js"></script>
+
 </body>
 </html>

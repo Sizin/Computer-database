@@ -1,52 +1,84 @@
 package com.excilys.cdb.config;
 
+import java.io.IOException;
 import java.util.Properties;
 
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
+
+import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScans;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 
-import static org.hibernate.cfg.Environment.*;
 
 @Configuration
+@PropertySource("classpath:mysql.properties")
 @EnableTransactionManagement
-@ComponentScan(basePackages = { "com.excilys.cdb.config", "com.excilys.cdb.mapper", "com.excilys.cdb.persistence",
-		"com.excilys.cdb.services", "com.excilys.cdb.servlets", "com.excilys.cdb.app", "com.excilys.cdb.validators",
-		"com.excilys.cdb.controller" })
+@ComponentScan(basePackages = { "com.excilys.cdb.config", "com.excilys.cdb.mapper", "com.excilys.cdb.dao",
+		"com.excilys.cdb.services", "com.excilys.cdb.app", "com.excilys.cdb.validators", "com.excilys.cdb.controller" })
 public class HibernateAppConfig {
+
 	@Autowired
 	private Environment env;
 
 	@Bean
-	public LocalSessionFactoryBean getSessionFactory() {
-		LocalSessionFactoryBean factoryBean = new LocalSessionFactoryBean();
+	public HibernateTemplate hibernateTemplate() {
+		return new HibernateTemplate(sessionFactory());
+	}
 
-		Properties props = new Properties();
+	@Bean
+	public SessionFactory sessionFactory() {
+		LocalSessionFactoryBean lsfb = new LocalSessionFactoryBean();
+		lsfb.setDataSource(getDataSource());
+		lsfb.setAnnotatedClasses(Computer.class, Company.class);
+		lsfb.setHibernateProperties(hibernateProperties());
+		try {
+			lsfb.afterPropertiesSet();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return lsfb.getObject();
+	}
 
-		// Setting JDBC properties
-		props.put(DRIVER, env.getProperty("DB_DRIVER"));
-		props.put(URL, env.getProperty("DB_URL"));
-		props.put(USER, env.getProperty("DB_USERNAME"));
-		props.put(PASS, env.getProperty("DB_PASSWORD"));
+	@Bean
+	public DataSource getDataSource() {
+		BasicDataSource dataSource = new BasicDataSource();
+		dataSource.setDriverClassName(env.getRequiredProperty("db.driver"));
+		dataSource.setUrl(env.getRequiredProperty("db.url"));
+		dataSource.setUsername(env.getRequiredProperty("db.username"));
+		dataSource.setPassword(env.getRequiredProperty("db.password"));
+		
+		return dataSource;
+	}
 
-		// Setting Hibernate properties
-		props.put(SHOW_SQL, env.getProperty("hibernate.show_sql"));
-		props.put(HBM2DDL_AUTO, env.getProperty("hibernate.hbm2ddl.auto"));
+	@Bean
+	public HibernateTransactionManager hibTransMan() {
+		return new HibernateTransactionManager(sessionFactory());
+	}
 
-		factoryBean.setHibernateProperties(props);
-		factoryBean.setAnnotatedClasses(Computer.class, Company.class);
-
-		return factoryBean;
+	private Properties hibernateProperties() {
+		Properties properties = new Properties();
+		properties.put("hibernate.dialect", env.getRequiredProperty("hibernate.dialect"));
+		properties.put("hibernate.hbm2ddl.auto", env.getRequiredProperty("hibernate.hbm2ddl.auto"));
+		properties.put("hibernate.show_sql", env.getRequiredProperty("hibernate.show_sql"));
+		return properties;
 	}
 
 }

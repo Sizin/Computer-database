@@ -6,16 +6,19 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = { "com.excilys.cdb.config", "com.excilys.cdb.mapper", "com.excilys.cdb.persistence",
+@ComponentScan(basePackages = { "com.excilys.cdb.config", "com.excilys.cdb.mapper",
 		"com.excilys.cdb.services", "com.excilys.cdb.servlets", "com.excilys.cdb.app", "com.excilys.cdb.validators",
 		"com.excilys.cdb.controller" })
 public class WebMvcConfig implements WebMvcConfigurer {
@@ -39,7 +42,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		CookieLocaleResolver localeResolver = new CookieLocaleResolver();
 		return localeResolver;
 	}
-
+	
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 
@@ -48,4 +51,20 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		registry.addInterceptor(localeChangeInterceptor);
 	}
 
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("/css/**").addResourceLocations("/resources/css/");
+		registry.addResourceHandler("/js/**").addResourceLocations("/resources/js/");
+		registry.addResourceHandler("/img/**").addResourceLocations("/resources/img/");
+	}
+	
+	@Bean
+	public ViewResolver viewResolver() {
+		InternalResourceViewResolver bean = new InternalResourceViewResolver();
+		bean.setPrefix("/WEB-INF/views/");
+		bean.setSuffix(".jsp");
+		return bean;
+	}
+	
+	
 }

@@ -79,7 +79,6 @@ public class ComputerDao {
 		} else {
 			if (offset != 0 && range != 0) {
 
-				
 				int page = (offset == 1) ? 0 : offset * range;
 				return jdbcTemplate.query(SEARCH_LIKE + "LIMIT ?, ?", new Object[] {"%" +search+ "%", page, range}, computerRowMapper);
 			} else {

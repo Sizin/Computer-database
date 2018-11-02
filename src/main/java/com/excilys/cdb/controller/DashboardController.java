@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.ComputerPagination;
 import com.excilys.cdb.services.ComputerService;
+import com.excilys.cdb.services.HibernateComputerService;
 
 @Controller
 //@RequestMapping("/Dashboard")
@@ -28,6 +29,10 @@ public class DashboardController {
 	@Autowired
 	private ComputerService computerService;
 	
+	@Autowired
+	private HibernateComputerService hcomputerService;
+	
+	
 	public ComputerPagination computerPagination = new ComputerPagination();
 		
 
@@ -35,10 +40,12 @@ public class DashboardController {
 //	@GetMapping
 	@GetMapping("/Dashboard")
 	public String getDashboard(Locale locale, @RequestParam Map<String,String> requestParams, Model model) {
+	
 		
 		String search = requestParams.get("search");
 		computerPagination.setSearchedWord(search);
-		computerPagination.setNumberOfComputer(computerService.getComputerCount(search));
+		
+		computerPagination.setNumberOfComputer(hcomputerService.getCount(search));
 		
 		List<Computer> computers = new ArrayList<Computer>();
 		
@@ -52,25 +59,28 @@ public class DashboardController {
 		}
 		
 		if (search != "" && search != null) {
-			// Setting the searched word in the Pagination class cause it impacts it directly
+//			// Setting the searched word in the Pagination class cause it impacts it directly
 			computerPagination.setSearchedWord(search);
-			computerPagination.setNumberOfComputer(computerService.getComputerCount(search));
+			computerPagination.setNumberOfComputer(hcomputerService.getCount(search));
 			computerPagination.setPages();
-			computers = computerService.showComputers(computerPagination.getCurrentPage(),	computerPagination.getResultPerPage(), search);
+			computers = hcomputerService.findAll(computerPagination.getCurrentPage(),	computerPagination.getResultPerPage(), search);
 
 		}else if(computerPagination.getSearchedWord() != null && computerPagination.getSearchedWord() != "") {
-			computerPagination.setNumberOfComputer(computerService.getComputerCount(search));
+			computerPagination.setNumberOfComputer(hcomputerService.getCount(search));
 			computerPagination.setPages();
-			computers = computerService.showComputers(computerPagination.getCurrentPage(),	computerPagination.getResultPerPage(), computerPagination.getSearchedWord());
+			computers = hcomputerService.findAll(computerPagination.getCurrentPage(),	computerPagination.getResultPerPage(), computerPagination.getSearchedWord());
 		}else {
 			computerPagination.setSearchedWord(null);
-			computerPagination.setNumberOfComputer(computerService.getComputerCount());
+			computerPagination.setNumberOfComputer(hcomputerService.getCount());
 			computerPagination.setPages();
-			computers = computerService.showComputers(computerPagination.getCurrentPage(),	computerPagination.getResultPerPage(), computerPagination.getSearchedWord());
+			computers = hcomputerService.findAll(computerPagination.getCurrentPage(),	computerPagination.getResultPerPage());
 		}		
-		
+	
 		model.addAttribute("listComputer", computers);
 		model.addAttribute("resultPerPage", computerPagination.getResultPerPage());
+		
+		System.out.println("---------------" + computerPagination.getCurrentStartPage());
+		
 		model.addAttribute("currentPage", computerPagination.getCurrentPage());
 		model.addAttribute("currentEndPage", computerPagination.getCurrentEndPage());
 		model.addAttribute("currentStartPage", computerPagination.getCurrentStartPage());
@@ -86,11 +96,11 @@ public class DashboardController {
 		computerPagination.setSearchedWord(search);
 		return "dashboard";
 	}
-	
-	@RequestMapping(value="/**",method = RequestMethod.GET)
-	public String getAnythingelse(){
-		return "404";
-	}
-	
+//	
+//	@RequestMapping(value="/**",method = RequestMethod.GET)
+//	public String getAnythingelse(){
+//		return "404";
+//	}
+//	
 
 }
