@@ -14,7 +14,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
-@ComponentScan(basePackages = { "com.excilys.cdb.app", "com.excilys.cdb.mapper", "com.excilys.cdb.persistence", "com.excilys.cdb.services", "com.excilys.cdb.validators"})
+@ComponentScan(basePackages = { "com.excilys.cdb.app", "com.excilys.cdb.mapper", "com.excilys.cdb.persistence", "com.excilys.cdb.cliservices", "com.excilys.cdb.validators"})
 public class ClientInterfaceConfig {
 
 	private HikariDataSource dataSource;

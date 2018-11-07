@@ -6,8 +6,8 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 
+import com.excilys.cdb.cliservices.ComputerService;
 import com.excilys.cdb.persistence.ComputerCRUDTest;
-import com.excilys.cdb.services.ComputerService;
 
 public class TestRunner {
 

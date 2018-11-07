@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.excilys.cdb.cliservices.CompanyService;
 import com.excilys.cdb.dto.ComputerDto;
 import com.excilys.cdb.exceptions.ComputerNameException;
 import com.excilys.cdb.exceptions.DateFormatException;
@@ -26,7 +27,6 @@ import com.excilys.cdb.mapper.CompanyMapper;
 import com.excilys.cdb.mapper.ComputerMapper;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
-import com.excilys.cdb.services.CompanyService;
 import com.excilys.cdb.services.HibernateCompanyService;
 import com.excilys.cdb.services.HibernateComputerService;
 import com.excilys.cdb.validators.ComputerValidator;

@@ -1,4 +1,4 @@
-package com.excilys.cdb.services;
+package com.excilys.cdb.cliservices;
 
 import java.util.List;
 
