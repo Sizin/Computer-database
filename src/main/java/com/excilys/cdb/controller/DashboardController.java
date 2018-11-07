@@ -18,16 +18,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.ComputerPagination;
-import com.excilys.cdb.services.ComputerService;
 import com.excilys.cdb.services.HibernateComputerService;
 
 @Controller
 //@RequestMapping("/Dashboard")
 @RequestMapping
 public class DashboardController {
-
-	@Autowired
-	private ComputerService computerService;
 	
 	@Autowired
 	private HibernateComputerService hcomputerService;
@@ -36,14 +32,14 @@ public class DashboardController {
 	public ComputerPagination computerPagination = new ComputerPagination();
 		
 
-
 //	@GetMapping
 	@GetMapping("/Dashboard")
 	public String getDashboard(Locale locale, @RequestParam Map<String,String> requestParams, Model model) {
 	
-		
 		String search = requestParams.get("search");
 		computerPagination.setSearchedWord(search);
+		
+		System.out.println("-------------------------------------------------------------------"+ hcomputerService.getCount(search));
 		
 		computerPagination.setNumberOfComputer(hcomputerService.getCount(search));
 		
@@ -59,7 +55,7 @@ public class DashboardController {
 		}
 		
 		if (search != "" && search != null) {
-//			// Setting the searched word in the Pagination class cause it impacts it directly
+			// Setting the searched word in the Pagination class cause it impacts it directly
 			computerPagination.setSearchedWord(search);
 			computerPagination.setNumberOfComputer(hcomputerService.getCount(search));
 			computerPagination.setPages();
@@ -78,9 +74,8 @@ public class DashboardController {
 	
 		model.addAttribute("listComputer", computers);
 		model.addAttribute("resultPerPage", computerPagination.getResultPerPage());
-		
-		System.out.println("---------------" + computerPagination.getCurrentStartPage());
-		
+
+		System.out.println("---------------" + computerPagination.getNbPage());
 		model.addAttribute("currentPage", computerPagination.getCurrentPage());
 		model.addAttribute("currentEndPage", computerPagination.getCurrentEndPage());
 		model.addAttribute("currentStartPage", computerPagination.getCurrentStartPage());

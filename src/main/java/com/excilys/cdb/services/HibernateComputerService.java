@@ -46,19 +46,27 @@ public class HibernateComputerService {
 		return hcomputerDao.findCount(search);
 	}
 	
-	@Transactional(readOnly = true)
+	@Transactional
 	public void insertComputer(Computer computer) {
 		hcomputerDao.add(computer);
 	}
 	
-	@Transactional(readOnly = true)
+	@Transactional
 	public void updateComputer(Computer computer) {
 		hcomputerDao.update(computer);
 	}
 	
 	
-
+	@Transactional
+	public void deleteComputer(List<Computer> computers) {
+		for(Computer computer : computers) {
+			hcomputerDao.delete(computer);
+		}
+	}
 	
-	
+	@Transactional
+	public void deleteComputer(Computer computer) {
+		hcomputerDao.delete(computer);
+	}
 	
 }

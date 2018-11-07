@@ -56,7 +56,7 @@ public class HibernateAppConfig {
 		}
 		return lsfb.getObject();
 	}
-
+	
 	@Bean
 	public DataSource getDataSource() {
 		BasicDataSource dataSource = new BasicDataSource();

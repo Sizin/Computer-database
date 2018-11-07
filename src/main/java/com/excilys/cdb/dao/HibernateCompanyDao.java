@@ -13,22 +13,14 @@ import com.excilys.cdb.model.Computer;
 
 @Repository
 public class HibernateCompanyDao implements HibernateCompanyDaoInterface{
-
+	
 	@Autowired
 	private SessionFactory sessionFactory;
 	
 	@Override
-	public Computer findById(long id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public List<Company> findAll() {
 		Session session = sessionFactory.getCurrentSession();
-		String hql = "FROM Company";
-		Query query = session.createQuery(hql);
-		return query.list();
+		return session.createQuery(SELECT_ALL).list();
 	}
 
 }

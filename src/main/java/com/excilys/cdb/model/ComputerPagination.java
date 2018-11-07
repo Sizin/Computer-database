@@ -3,17 +3,10 @@ package com.excilys.cdb.model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.excilys.cdb.services.ComputerService;
 import com.excilys.cdb.services.HibernateComputerService;
 
 @Component
 public class ComputerPagination {
-	
-//	@Autowired
-//	private ComputerService computerService;
-
-//	@Autowired
-//	private HibernateComputerService hcomputerService;
 	
 	protected int numberOfComputer;
 	protected int resultPerPage;
@@ -37,9 +30,7 @@ public class ComputerPagination {
 	
 	public void setPages() {
 
-		if(searchedWord != null && searchedWord != "") {
-			nbPage = numberOfComputer/resultPerPage;
-		}
+		nbPage = numberOfComputer/resultPerPage;
 		
 		if(nbPage > 5 ) {
 			//  If we're at first page range (1-5)
@@ -64,7 +55,6 @@ public class ComputerPagination {
 			}
 			
 		}else if (nbPage <= 5) {
-			
 			currentStartPage = 1;
 			currentEndPage = nbPage;
 			arrowDisplay = "none";
@@ -72,14 +62,6 @@ public class ComputerPagination {
 		}
 	}
 	
-//	public ComputerService getComputerService() {
-//		return computerService;
-//	}
-//
-//	public void setComputerService(ComputerService computerService) {
-//		this.computerService = computerService;
-//	}
-
 	public int getNumberOfComputer() {
 		return numberOfComputer;
 	}

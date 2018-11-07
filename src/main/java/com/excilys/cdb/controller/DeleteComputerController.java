@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.excilys.cdb.dto.ComputerDto;
 import com.excilys.cdb.mapper.ComputerMapper;
 import com.excilys.cdb.model.Computer;
-import com.excilys.cdb.services.ComputerService;
 import com.excilys.cdb.services.HibernateComputerService;
 
 @Controller
@@ -23,9 +22,7 @@ public class DeleteComputerController {
 	
 	@Autowired
 	private HibernateComputerService hcomputerService;
-	
-	@Autowired
-	private ComputerService computerService;
+
 	@Autowired
 	private ComputerMapper computerMapper;
 	
@@ -44,7 +41,7 @@ public class DeleteComputerController {
 				Computer computer = computerMapper.toComputer(computerDto);
 				computersToDelete.add(computer);
 			}
-			computerService.deleteComputer(computersToDelete);
+			hcomputerService.deleteComputer(computersToDelete);
 			return "redirect:/Dashboard";
 		}else {
 			return "500";

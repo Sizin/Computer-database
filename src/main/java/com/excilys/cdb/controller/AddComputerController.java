@@ -26,8 +26,7 @@ import com.excilys.cdb.mapper.CompanyMapper;
 import com.excilys.cdb.mapper.ComputerMapper;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
-import com.excilys.cdb.services.CompanyService;
-import com.excilys.cdb.services.ComputerService;
+
 import com.excilys.cdb.services.HibernateCompanyService;
 import com.excilys.cdb.services.HibernateComputerService;
 import com.excilys.cdb.validators.ComputerValidator;
@@ -44,11 +43,7 @@ public class AddComputerController {
 	@Autowired
 	private HibernateCompanyService hcompanyService;
 	
-	
-	@Autowired
-	private CompanyService companyService;
-	@Autowired
-	private ComputerService computerService;
+
 	@Autowired
 	private ComputerMapper computerMapper;
 	@Autowired
@@ -72,7 +67,7 @@ public class AddComputerController {
 		if(result.hasErrors()) {
 			return "500";
 		}
-		computerService.insertComputer(computer);
+		hcomputerService.insertComputer(computer);
 		return "redirect:/Dashboard";
 	}
 	
