@@ -1,0 +1,5 @@
+com/excilys/cdb/config/HibernateAppConfig.class
+com/excilys/cdb/config/AppInitializer.class
+com/excilys/cdb/config/WebMvcConfig.class
+com/excilys/cdb/config/ClientInterfaceConfig.class
+com/excilys/cdb/config/HikariAppConfig.class

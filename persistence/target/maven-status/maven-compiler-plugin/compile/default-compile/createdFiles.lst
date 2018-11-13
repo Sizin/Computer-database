@@ -1,0 +1,10 @@
+com/excilys/cdb/persistence/ComputerRowMapper.class
+com/excilys/cdb/persistence/ComputerDao.class
+com/excilys/cdb/persistence/HibernateComputerDaoInterface.class
+com/excilys/cdb/persistence/ConnectionTestManager.class
+com/excilys/cdb/persistence/CompanyDao.class
+com/excilys/cdb/persistence/HibernateCompanyDao.class
+com/excilys/cdb/persistence/CompanyRowMapper.class
+com/excilys/cdb/persistence/ConnectionManager.class
+com/excilys/cdb/persistence/HibernateComputerDao.class
+com/excilys/cdb/persistence/HibernateCompanyDaoInterface.class
