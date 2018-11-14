@@ -1,7 +1,6 @@
 package com.excilys.cdb.console;
 
 import java.sql.SQLException;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Pattern;
 

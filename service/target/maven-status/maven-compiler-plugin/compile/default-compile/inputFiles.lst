@@ -1,4 +1,4 @@
-/home/excilys/eclipse-workspace/Cdb/service/src/main/java/com/excilys/cdb/service/HibernateCompanyService.java
 /home/excilys/eclipse-workspace/Cdb/service/src/main/java/com/excilys/cdb/service/CompanyService.java
-/home/excilys/eclipse-workspace/Cdb/service/src/main/java/com/excilys/cdb/service/HibernateComputerService.java
+/home/excilys/eclipse-workspace/Cdb/service/src/main/java/com/excilys/cdb/service/hibernateService/HibernateComputerService.java
+/home/excilys/eclipse-workspace/Cdb/service/src/main/java/com/excilys/cdb/service/hibernateService/HibernateCompanyService.java
 /home/excilys/eclipse-workspace/Cdb/service/src/main/java/com/excilys/cdb/service/ComputerService.java

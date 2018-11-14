@@ -32,8 +32,12 @@ public final class Computer {
 	private LocalDate discontinued;
 	
 
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="company_id", foreignKey = @ForeignKey(name = "fk_computer_company_1"))
+
+//	@ManyToOne(cascade = CascadeType.ALL)
+//	@ManyToOne(optional = true)
+//	@JoinColumn(name="company_id", updatable = false)
+	@ManyToOne
+	@JoinColumn(name="company_id")
 	private Company company = new Company();
 
 	public Computer() {

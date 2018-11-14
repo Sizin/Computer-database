@@ -1,4 +1,8 @@
-/home/excilys/eclipse-workspace/Cdb/webapp/src/main/java/com/excilys/cdb/webapp/AddComputerController.java
-/home/excilys/eclipse-workspace/Cdb/webapp/src/main/java/com/excilys/cdb/webapp/DashboardController.java
-/home/excilys/eclipse-workspace/Cdb/webapp/src/main/java/com/excilys/cdb/webapp/EditComputerController.java
-/home/excilys/eclipse-workspace/Cdb/webapp/src/main/java/com/excilys/cdb/webapp/DeleteComputerController.java
+/home/excilys/eclipse-workspace/Cdb/webapp/src/main/java/com/excilys/cdb/webapp/controller/DeleteComputerController.java
+/home/excilys/eclipse-workspace/Cdb/webapp/src/main/java/com/excilys/cdb/webapp/config/AppInitializer.java
+/home/excilys/eclipse-workspace/Cdb/webapp/src/main/java/com/excilys/cdb/webapp/config/SecurityConfig.java
+/home/excilys/eclipse-workspace/Cdb/webapp/src/main/java/com/excilys/cdb/webapp/controller/DashboardController.java
+/home/excilys/eclipse-workspace/Cdb/webapp/src/main/java/com/excilys/cdb/webapp/controller/EditComputerController.java
+/home/excilys/eclipse-workspace/Cdb/webapp/src/main/java/com/excilys/cdb/webapp/config/HibernateAppConfig.java
+/home/excilys/eclipse-workspace/Cdb/webapp/src/main/java/com/excilys/cdb/webapp/controller/AddComputerController.java
+/home/excilys/eclipse-workspace/Cdb/webapp/src/main/java/com/excilys/cdb/webapp/config/WebMvcConfig.java
