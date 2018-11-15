@@ -1,4 +1,5 @@
 /home/excilys/eclipse-workspace/Cdb/persistence/src/main/java/com/excilys/cdb/persistence/ComputerDao.java
+/home/excilys/eclipse-workspace/Cdb/persistence/src/main/java/com/excilys/cdb/persistence/hibernatePersistence/HibernateUserDao.java
 /home/excilys/eclipse-workspace/Cdb/persistence/src/main/java/com/excilys/cdb/persistence/ComputerRowMapper.java
 /home/excilys/eclipse-workspace/Cdb/persistence/src/main/java/com/excilys/cdb/persistence/hibernatePersistence/HibernateCompanyDaoInterface.java
 /home/excilys/eclipse-workspace/Cdb/persistence/src/main/java/com/excilys/cdb/persistence/ConnectionTestManager.java

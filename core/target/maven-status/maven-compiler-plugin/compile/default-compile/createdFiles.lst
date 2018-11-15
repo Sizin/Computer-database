@@ -1,5 +1,5 @@
-com/excilys/cdb/core/Computer.class
 com/excilys/cdb/core/Company.class
+com/excilys/cdb/core/Computer.class
 com/excilys/cdb/core/CompanyBuilder.class
 com/excilys/cdb/core/ComputerPagination.class
 com/excilys/cdb/core/ComputerBuilder.class

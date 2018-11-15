@@ -64,7 +64,6 @@ public class HibernateAppConfig {
 		dataSource.setUrl(env.getRequiredProperty("db.url"));
 		dataSource.setUsername(env.getRequiredProperty("db.username"));
 		dataSource.setPassword(env.getRequiredProperty("db.password"));
-		
 		return dataSource;
 	}
 
